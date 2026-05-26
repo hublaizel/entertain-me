@@ -43,6 +43,7 @@ const DEFAULT_STATE = {
                 raum: ['Musikanlage', 'Beamer'],
                 catering: ['Nur Getränke']
             },
+            ownEquipment: 'Eine eigene Hüpfburg ist bereits vorhanden und wird im Garten aufgestellt. Zudem stellen wir eigene Festbänke bereit.',
             status: 'active',
             createdAt: new Date().toISOString()
         }
@@ -59,6 +60,7 @@ const DEFAULT_STATE = {
             availabilities: ['Wochenende', 'Wochentage', 'Feiertage'],
             availabilityNote: 'Buchungen bitte mindestens 2 Wochen im Voraus.',
             specs: ['Musikanlage', 'Aussenplatz', 'Keine anderen Gäste', 'Nur mit Verpflegung'], // Note: lacks 'Beamer'
+            ownEquipment: 'Fest installierte Zapfanlage, professionelle Gläserwaschmaschine, Tische und Stühle für 50 Personen vorhanden.',
             description: 'Unser Eventraum in Zürich Oerlikon bietet Platz für bis zu 50 Personen. Perfekt für Geburtstage und Vereinsfeste. Wir brauen unser eigenes Bier!',
             createdAt: new Date().toISOString()
         },
@@ -72,6 +74,7 @@ const DEFAULT_STATE = {
             availabilities: ['Wochenende', 'Wochentage', 'Abendstunden'],
             availabilityNote: 'Verfügbar für Caterings ab 10 Personen.',
             specs: ['Nur Getränke', 'Vegetarische Optionen'],
+            ownEquipment: 'Kühlboxen, mobile Warmhaltebehälter (Chafing Dishes), Buffet-Tische und Besteck für bis zu 80 Personen.',
             description: 'Hausgebrautes Bier, erlesene Weine und Cateringservice für Events in Zürich und Umgebung.',
             createdAt: new Date().toISOString()
         },
@@ -85,6 +88,7 @@ const DEFAULT_STATE = {
             availabilities: ['Wochenende', 'Abendstunden', 'Feiertage'],
             availabilityNote: 'Inkl. mobiler Bar und Gläser.',
             specs: ['Nur Getränke'],
+            ownEquipment: 'Zerlegbarer, beleuchteter LED-Bar-Tresen aus Holz, Profi-Shaker, Eisboxen und passende Cocktailgläser.',
             description: 'Professioneller Bar-Tending- & Cocktail-Service mit mobiler Bar für Ihr Event.',
             createdAt: new Date().toISOString()
         },
@@ -98,6 +102,7 @@ const DEFAULT_STATE = {
             availabilities: ['Wochenende', 'Wochentage', 'Abendstunden', 'Nach Absprache'],
             availabilityNote: 'Stundenweise Buchung möglich.',
             specs: [],
+            ownEquipment: 'Einheitliche, edle Service-Schürzen, Kellnerbesteck (Korkenzieher) und Serviertabletts.',
             description: 'Freundliches und speditives Servicepersonal für den Ausschank, das Buffet und die Gästebetreuung.',
             createdAt: new Date().toISOString()
         },
@@ -111,6 +116,7 @@ const DEFAULT_STATE = {
             availabilities: ['Wochenende', 'Abendstunden', 'Feiertage', 'Nach Absprache'],
             availabilityNote: 'Abends ab 18:00 Uhr verfügbar. Inklusive Sound- und Lichttechnik.',
             specs: [],
+            ownEquipment: 'Eigenes DJ-Pult (Pioneer DDJ-FLX10), 2x aktive Fullrange-Lautsprecher (PA) auf Stativen, Funkmikrofon und LED-Lichtbar für die Tanzfläche.',
             description: 'Erfahrener Event-DJ für die passende musikalische Begleitung. Inklusive Sound- und Lichttechnik.',
             createdAt: new Date().toISOString()
         }
@@ -471,6 +477,7 @@ function handleCreateEvent(event) {
     // Wishes
     const wishesRaum = Array.from(document.querySelectorAll('input[name="wish-raum"]:checked')).map(el => el.value);
     const wishesCatering = Array.from(document.querySelectorAll('input[name="wish-catering"]:checked')).map(el => el.value);
+    const ownEquipment = document.getElementById('event-own-equipment').value;
     
     const newEvent = {
         id: `event-${Date.now()}`,
@@ -487,6 +494,7 @@ function handleCreateEvent(event) {
             raum: wishesRaum,
             catering: wishesCatering
         },
+        ownEquipment,
         status: 'active',
         createdAt: new Date().toISOString()
     };
@@ -901,6 +909,29 @@ function renderMatchDetails(matchId) {
         `;
     }
 
+    let equipmentHTML = '';
+    if (event.ownEquipment || offer.ownEquipment) {
+        equipmentHTML = `
+            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top:15px">
+                <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:8px">Ausstattung & Ausrüstung:</span>
+                
+                ${event.ownEquipment ? `
+                    <div style="margin-bottom:10px">
+                        <span style="font-weight:500; font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px">Vom Veranstalter gestellt (Eigene Mittel):</span>
+                        <p style="font-size:0.8rem; background:rgba(255,255,255,0.01); padding:6px 10px; border-radius:var(--radius-sm); border:1px solid rgba(255,255,255,0.03); margin:0">${escapeHtml(event.ownEquipment)}</p>
+                    </div>
+                ` : ''}
+                
+                ${offer.ownEquipment ? `
+                    <div>
+                        <span style="font-weight:500; font-size:0.75rem; color:var(--color-primary); display:block; margin-bottom:2px">Vom Anbieter mitgebracht (Ausrüstung):</span>
+                        <p style="font-size:0.8rem; background:rgba(155, 135, 245, 0.04); padding:6px 10px; border-radius:var(--radius-sm); border:1px solid rgba(155, 135, 245, 0.1); margin:0">${escapeHtml(offer.ownEquipment)}</p>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
     evalCard.innerHTML = `
         <div class="eval-header">
             <h3>Angebot vergleichen</h3>
@@ -918,6 +949,8 @@ function renderMatchDetails(matchId) {
         ${extraNotesHTML}
         
         ${availabilityHTML}
+        
+        ${equipmentHTML}
         
         <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top:15px">
             <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:5px">Beschreibung des Anbieters:</span>
@@ -1456,6 +1489,7 @@ function handleCreateOffer(event) {
     // Get availabilities
     const availabilities = Array.from(document.querySelectorAll('input[name="offer-availabilities"]:checked')).map(el => el.value);
     const availabilityNote = document.getElementById('offer-availability-note').value;
+    const ownEquipment = document.getElementById('offer-own-equipment').value;
     
     // For each checked category, save a separate offer object so it integrates with existing match engine
     categories.forEach((category, idx) => {
@@ -1476,6 +1510,7 @@ function handleCreateOffer(event) {
             availabilities,
             availabilityNote,
             specs,
+            ownEquipment,
             description: desc || `Unser professionelles Angebot in der Kategorie ${category}.`,
             createdAt: new Date().toISOString()
         };
