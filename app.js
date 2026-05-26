@@ -56,6 +56,8 @@ const DEFAULT_STATE = {
             location: '8057 Zürich',
             radius: 50,
             eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
+            availabilities: ['Wochenende', 'Wochentage', 'Feiertage'],
+            availabilityNote: 'Buchungen bitte mindestens 2 Wochen im Voraus.',
             specs: ['Musikanlage', 'Aussenplatz', 'Keine anderen Gäste', 'Nur mit Verpflegung'], // Note: lacks 'Beamer'
             description: 'Unser Eventraum in Zürich Oerlikon bietet Platz für bis zu 50 Personen. Perfekt für Geburtstage und Vereinsfeste. Wir brauen unser eigenes Bier!',
             createdAt: new Date().toISOString()
@@ -67,6 +69,8 @@ const DEFAULT_STATE = {
             location: '8057 Zürich',
             radius: 50,
             eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
+            availabilities: ['Wochenende', 'Wochentage', 'Abendstunden'],
+            availabilityNote: 'Verfügbar für Caterings ab 10 Personen.',
             specs: ['Nur Getränke', 'Vegetarische Optionen'],
             description: 'Hausgebrautes Bier, erlesene Weine und Cateringservice für Events in Zürich und Umgebung.',
             createdAt: new Date().toISOString()
@@ -78,6 +82,8 @@ const DEFAULT_STATE = {
             location: '8057 Zürich',
             radius: 50,
             eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
+            availabilities: ['Wochenende', 'Abendstunden', 'Feiertage'],
+            availabilityNote: 'Inkl. mobiler Bar und Gläser.',
             specs: ['Nur Getränke'],
             description: 'Professioneller Bar-Tending- & Cocktail-Service mit mobiler Bar für Ihr Event.',
             createdAt: new Date().toISOString()
@@ -89,6 +95,8 @@ const DEFAULT_STATE = {
             location: '8057 Zürich',
             radius: 50,
             eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
+            availabilities: ['Wochenende', 'Wochentage', 'Abendstunden', 'Nach Absprache'],
+            availabilityNote: 'Stundenweise Buchung möglich.',
             specs: [],
             description: 'Freundliches und speditives Servicepersonal für den Ausschank, das Buffet und die Gästebetreuung.',
             createdAt: new Date().toISOString()
@@ -100,6 +108,8 @@ const DEFAULT_STATE = {
             location: '8057 Zürich',
             radius: 50,
             eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
+            availabilities: ['Wochenende', 'Abendstunden', 'Feiertage', 'Nach Absprache'],
+            availabilityNote: 'Abends ab 18:00 Uhr verfügbar. Inklusive Sound- und Lichttechnik.',
             specs: [],
             description: 'Erfahrener Event-DJ für die passende musikalische Begleitung. Inklusive Sound- und Lichttechnik.',
             createdAt: new Date().toISOString()
@@ -867,6 +877,30 @@ function renderMatchDetails(matchId) {
         `;
     }
     
+    let availabilityHTML = '';
+    if (offer.availabilities && offer.availabilities.length > 0) {
+        availabilityHTML = `
+            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top:15px">
+                <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:5px">Verfügbarkeit von ${providerName}:</span>
+                <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px">
+                    ${offer.availabilities.map(a => `<span class="tag-compact" style="background:rgba(155, 135, 245, 0.1); color:var(--color-accent); font-size:0.75rem; padding:2px 8px; border-radius:10px; border:1px solid rgba(155, 135, 245, 0.2)">${escapeHtml(a)}</span>`).join('')}
+                </div>
+                ${offer.availabilityNote ? `<p style="font-size:0.85rem; color:var(--text-body); margin-top:5px; margin-bottom:0; font-style:italic">"${escapeHtml(offer.availabilityNote)}"</p>` : ''}
+            </div>
+        `;
+    } else {
+        availabilityHTML = `
+            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top:15px">
+                <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:5px">Verfügbarkeit von ${providerName}:</span>
+                <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px">
+                    <span class="tag-compact" style="background:rgba(155, 135, 245, 0.1); color:var(--color-accent); font-size:0.75rem; padding:2px 8px; border-radius:10px; border:1px solid rgba(155, 135, 245, 0.2)">Wochenende</span>
+                    <span class="tag-compact" style="background:rgba(155, 135, 245, 0.1); color:var(--color-accent); font-size:0.75rem; padding:2px 8px; border-radius:10px; border:1px solid rgba(155, 135, 245, 0.2)">Nach Absprache</span>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-body); margin-top:5px; margin-bottom:0; font-style:italic">"Auf Anfrage verfügbar."</p>
+            </div>
+        `;
+    }
+
     evalCard.innerHTML = `
         <div class="eval-header">
             <h3>Angebot vergleichen</h3>
@@ -883,9 +917,11 @@ function renderMatchDetails(matchId) {
         
         ${extraNotesHTML}
         
-        <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top:20px">
+        ${availabilityHTML}
+        
+        <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top:15px">
             <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:5px">Beschreibung des Anbieters:</span>
-            <p style="font-size:0.85rem; font-style:italic; line-height:1.4">${escapeHtml(offer.description)}</p>
+            <p style="font-size:0.85rem; font-style:italic; line-height:1.4; margin-bottom:0">${escapeHtml(offer.description)}</p>
         </div>
     `;
     
@@ -1387,66 +1423,85 @@ function submitProviderApplication(event, matchId) {
     navigateTo('provider-dashboard');
 }
 
-// ==========================================
-// RENDER: CREATE PROVIDER OFFER (MARTIN)
-// ==========================================
+function toggleSpecFieldsDynamic() {
+    const isRaumChecked = document.getElementById('service-raum') && document.getElementById('service-raum').checked;
+    const isCateringChecked = document.getElementById('service-catering') && document.getElementById('service-catering').checked;
+    
+    const raumEl = document.getElementById('spec-raum-fields');
+    const cateringEl = document.getElementById('spec-catering-fields');
+    
+    if (raumEl) raumEl.classList.toggle('is-hidden', !isRaumChecked);
+    if (cateringEl) cateringEl.classList.toggle('is-hidden', !isCateringChecked);
+}
+
 function toggleOfferSpecFields() {
-    const category = document.getElementById('offer-category').value;
-    document.getElementById('spec-raum-fields').classList.toggle('is-hidden', category !== 'Raum');
-    document.getElementById('spec-catering-fields').classList.toggle('is-hidden', category !== 'Catering');
+    toggleSpecFieldsDynamic();
 }
 
 function handleCreateOffer(event) {
     event.preventDefault();
     
-    const category = document.getElementById('offer-category').value;
     const location = document.getElementById('offer-location').value;
     const radius = parseInt(document.getElementById('offer-radius').value);
     const desc = document.getElementById('offer-desc').value;
     
-    const eventTypes = Array.from(document.querySelectorAll('input[name="offer-event-types"]:checked')).map(el => el.value);
+    // Get all checked services (categories)
+    const categories = Array.from(document.querySelectorAll('input[name="offer-categories"]:checked')).map(el => el.value);
     
-    let specs = [];
-    if (category === 'Raum') {
-        specs = Array.from(document.querySelectorAll('input[name="spec-raum-item"]:checked')).map(el => el.value);
-    } else if (category === 'Catering') {
-        specs = Array.from(document.querySelectorAll('input[name="spec-catering-item"]:checked')).map(el => el.value);
+    if (categories.length === 0) {
+        showToast('Bitte wählen Sie mindestens eine Dienstleistung aus.', 'error');
+        return;
     }
     
-    const newOffer = {
-        id: `offer-${Date.now()}`,
-        providerId: 'martin',
-        category,
-        location,
-        radius,
-        eventTypes,
-        specs,
-        description: desc || `Unser professionelles Angebot in der Kategorie ${category}.`,
-        createdAt: new Date().toISOString()
-    };
+    // Get availabilities
+    const availabilities = Array.from(document.querySelectorAll('input[name="offer-availabilities"]:checked')).map(el => el.value);
+    const availabilityNote = document.getElementById('offer-availability-note').value;
     
-    state.providerOffers.push(newOffer);
-    
-    // Evaluate if this matches any existing active events
-    state.events.forEach(ev => {
-        const supportsEventType = eventTypes.includes(ev.type) || eventTypes.includes('Andere');
-        if (ev.needs.includes(category) && supportsEventType) {
-            const exists = state.matches.some(m => m.eventId === ev.id && m.offerId === newOffer.id);
-            if (!exists) {
-                state.matches.push({
-                    id: `match-${ev.id}-${newOffer.id}`,
-                    eventId: ev.id,
-                    offerId: newOffer.id,
-                    category: category,
-                    status: 'potential',
-                    providerMessage: '',
-                    updatedAt: new Date().toISOString()
-                });
-            }
+    // For each checked category, save a separate offer object so it integrates with existing match engine
+    categories.forEach((category, idx) => {
+        let specs = [];
+        if (category === 'Raum') {
+            specs = Array.from(document.querySelectorAll('input[name="spec-raum-item"]:checked')).map(el => el.value);
+        } else if (category === 'Catering') {
+            specs = Array.from(document.querySelectorAll('input[name="spec-catering-item"]:checked')).map(el => el.value);
         }
+        
+        const newOffer = {
+            id: `offer-${Date.now()}-${idx}`,
+            providerId: 'martin',
+            category,
+            location,
+            radius,
+            eventTypes: ['Andere'], // Support all event types
+            availabilities,
+            availabilityNote,
+            specs,
+            description: desc || `Unser professionelles Angebot in der Kategorie ${category}.`,
+            createdAt: new Date().toISOString()
+        };
+        
+        state.providerOffers.push(newOffer);
+        
+        // Evaluate if this matches any existing active events
+        state.events.forEach(ev => {
+            if (ev.needs.includes(category)) {
+                const exists = state.matches.some(m => m.eventId === ev.id && m.offerId === newOffer.id);
+                if (!exists) {
+                    state.matches.push({
+                        id: `match-${ev.id}-${newOffer.id}`,
+                        eventId: ev.id,
+                        offerId: newOffer.id,
+                        category: category,
+                        status: 'potential',
+                        providerMessage: '',
+                        updatedAt: new Date().toISOString()
+                    });
+                }
+            }
+        });
     });
     
-    showToast('Leistung erfolgreich gespeichert', 'success');
+    showToast('Profil und Leistungen erfolgreich gespeichert', 'success');
     saveState();
     updateBadges();
     

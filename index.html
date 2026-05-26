@@ -617,106 +617,112 @@
                 
                 <form id="offer-create-form" onsubmit="handleCreateOffer(event)">
                     <div class="form-group">
-                        <label>Für welche Eventarten sind Ihre Leistungen geeignet?</label>
+                        <label>Welche Dienstleistungen bieten Sie an? (Was können Sie?)</label>
                         <div class="checkbox-grid-compact">
-                            <label class="chip-checkbox" for="class-birthday">
-                                <input type="checkbox" id="class-birthday" name="offer-event-types" value="Geburtstagsparty" checked>
-                                <span>Geburtstagsparty</span>
+                            <label class="chip-checkbox" for="service-raum">
+                                <input type="checkbox" id="service-raum" name="offer-categories" value="Raum" onchange="toggleSpecFieldsDynamic()" checked>
+                                <span>Raum / Location</span>
                             </label>
-                            <label class="chip-checkbox" for="class-wedding">
-                                <input type="checkbox" id="class-wedding" name="offer-event-types" value="Hochzeit" checked>
-                                <span>Hochzeit</span>
+                            <label class="chip-checkbox" for="service-catering">
+                                <input type="checkbox" id="service-catering" name="offer-categories" value="Catering" onchange="toggleSpecFieldsDynamic()" checked>
+                                <span>Catering / Verpflegung</span>
                             </label>
-                            <label class="chip-checkbox" for="class-company">
-                                <input type="checkbox" id="class-company" name="offer-event-types" value="Firmenfest" checked>
-                                <span>Firmenfest</span>
+                            <label class="chip-checkbox" for="service-bar">
+                                <input type="checkbox" id="service-bar" name="offer-categories" value="Bar">
+                                <span>Bar-Tending & Getränke</span>
                             </label>
-                            <label class="chip-checkbox" for="class-bachelor">
-                                <input type="checkbox" id="class-bachelor" name="offer-event-types" value="Junggesellenabschied">
-                                <span>Junggesellenabschied</span>
+                            <label class="chip-checkbox" for="service-servicepersonal">
+                                <input type="checkbox" id="service-servicepersonal" name="offer-categories" value="Servicepersonal">
+                                <span>Servicepersonal</span>
                             </label>
-                            <label class="chip-checkbox" for="class-club">
-                                <input type="checkbox" id="class-club" name="offer-event-types" value="Vereinsfest" checked>
-                                <span>Vereinsfest</span>
+                            <label class="chip-checkbox" for="service-dj">
+                                <input type="checkbox" id="service-dj" name="offer-categories" value="DJ">
+                                <span>DJ'ing / Musik</span>
                             </label>
-                            <label class="chip-checkbox" for="class-workshop">
-                                <input type="checkbox" id="class-workshop" name="offer-event-types" value="Workshop">
-                                <span>Kurse / Workshops</span>
+                            <label class="chip-checkbox" for="service-livemusik">
+                                <input type="checkbox" id="service-livemusik" name="offer-categories" value="Live-Musik">
+                                <span>Live-Musik / Band</span>
                             </label>
-                            <label class="chip-checkbox" for="class-anniversary">
-                                <input type="checkbox" id="class-anniversary" name="offer-event-types" value="Jubiläum">
-                                <span>Jubiläum</span>
+                            <label class="chip-checkbox" for="service-unterhaltung">
+                                <input type="checkbox" id="service-unterhaltung" name="offer-categories" value="Unterhaltung">
+                                <span>Show & Unterhaltung</span>
                             </label>
-                            <label class="chip-checkbox" for="class-christmas">
-                                <input type="checkbox" id="class-christmas" name="offer-event-types" value="Weihnachtsfeier">
-                                <span>Weihnachtsfeier</span>
+                            <label class="chip-checkbox" for="service-fotografie">
+                                <input type="checkbox" id="service-fotografie" name="offer-categories" value="Fotografie">
+                                <span>Fotografie & Video</span>
                             </label>
-                            <label class="chip-checkbox" for="class-apero">
-                                <input type="checkbox" id="class-apero" name="offer-event-types" value="Apéro">
-                                <span>Apéro / Empfang</span>
+                            <label class="chip-checkbox" for="service-dekoration">
+                                <input type="checkbox" id="service-dekoration" name="offer-categories" value="Dekoration">
+                                <span>Dekoration / Floristik</span>
                             </label>
-                            <label class="chip-checkbox" for="class-conference">
-                                <input type="checkbox" id="class-conference" name="offer-event-types" value="Tagung">
-                                <span>Tagung / Seminar</span>
+                            <label class="chip-checkbox" for="service-technik">
+                                <input type="checkbox" id="service-technik" name="offer-categories" value="Technik">
+                                <span>Licht / Ton / Technik</span>
                             </label>
-                            <label class="chip-checkbox" for="class-networking">
-                                <input type="checkbox" id="class-networking" name="offer-event-types" value="Networking">
-                                <span>Networking-Event</span>
+                            <label class="chip-checkbox" for="service-mobiliar">
+                                <input type="checkbox" id="service-mobiliar" name="offer-categories" value="Mobiliar">
+                                <span>Mobiliar / Ausstattung</span>
                             </label>
-                            <label class="chip-checkbox" for="class-concert">
-                                <input type="checkbox" id="class-concert" name="offer-event-types" value="Kulturveranstaltung">
-                                <span>Konzert / Kultur</span>
+                            <label class="chip-checkbox" for="service-transport">
+                                <input type="checkbox" id="service-transport" name="offer-categories" value="Transport">
+                                <span>Transport / Shuttle</span>
                             </label>
-                            <label class="chip-checkbox" for="class-family">
-                                <input type="checkbox" id="class-family" name="offer-event-types" value="Familienfest">
-                                <span>Familienfest</span>
+                            <label class="chip-checkbox" for="service-sicherheit">
+                                <input type="checkbox" id="service-sicherheit" name="offer-categories" value="Sicherheit">
+                                <span>Sicherheit</span>
                             </label>
-                            <label class="chip-checkbox" for="class-graduation">
-                                <input type="checkbox" id="class-graduation" name="offer-event-types" value="Abschlussfeier">
-                                <span>Abschlussfeier</span>
+                            <label class="chip-checkbox" for="service-kinderbetreuung">
+                                <input type="checkbox" id="service-kinderbetreuung" name="offer-categories" value="Kinderbetreuung">
+                                <span>Kinderbetreuung</span>
                             </label>
-                            <label class="chip-checkbox" for="class-other">
-                                <input type="checkbox" id="class-other" name="offer-event-types" value="Andere" checked>
-                                <span>Andere</span>
+                            <label class="chip-checkbox" for="service-eventplanung">
+                                <input type="checkbox" id="service-eventplanung" name="offer-categories" value="Eventplanung">
+                                <span>Eventplanung / Koordination</span>
                             </label>
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-6">
-                            <label for="offer-category">Leistung (Kategorie)</label>
-                            <select id="offer-category" onchange="toggleOfferSpecFields()" required>
-                                <option value="Raum" selected>Raum / Location</option>
-                                <option value="Catering">Catering / Verpflegung</option>
-                                <option value="Unterhaltung">Show & Unterhaltung</option>
-                                <option value="Fotografie">Fotografie & Video</option>
-                                <option value="Bar">Bar-Tending & Getränke</option>
-                                <option value="Servicepersonal">Servicepersonal</option>
-                                <option value="DJ">DJ'ing / Musik</option>
-                                <option value="Live-Musik">Live-Musik / Band</option>
-                                <option value="Dekoration">Dekoration / Floristik</option>
-                                <option value="Technik">Licht / Ton / Technik</option>
-                                <option value="Mobiliar">Mobiliar / Ausstattung</option>
-                                <option value="Transport">Transport / Shuttle</option>
-                                <option value="Sicherheit">Sicherheit</option>
-                                <option value="Kinderbetreuung">Kinderbetreuung</option>
-                                <option value="Eventplanung">Eventplanung / Koordination</option>
-                            </select>
+                    <div class="form-group" style="margin-top: 25px;">
+                        <label>Wann und wie sind Sie verfügbar? (Verfügbarkeit)</label>
+                        <div class="checkbox-grid-compact" style="margin-bottom: 12px;">
+                            <label class="chip-checkbox" for="avail-weekend">
+                                <input type="checkbox" id="avail-weekend" name="offer-availabilities" value="Wochenende" checked>
+                                <span>Wochenende</span>
+                            </label>
+                            <label class="chip-checkbox" for="avail-weekdays">
+                                <input type="checkbox" id="avail-weekdays" name="offer-availabilities" value="Unter der Woche">
+                                <span>Unter der Woche</span>
+                            </label>
+                            <label class="chip-checkbox" for="avail-evenings">
+                                <input type="checkbox" id="avail-evenings" name="offer-availabilities" value="Abendstunden" checked>
+                                <span>Abends</span>
+                            </label>
+                            <label class="chip-checkbox" for="avail-holidays">
+                                <input type="checkbox" id="avail-holidays" name="offer-availabilities" value="Feiertage">
+                                <span>Feiertage</span>
+                            </label>
+                            <label class="chip-checkbox" for="avail-flexible">
+                                <input type="checkbox" id="avail-flexible" name="offer-availabilities" value="Nach Absprache" checked>
+                                <span>Nach Absprache</span>
+                            </label>
                         </div>
+                        <input type="text" id="offer-availability-note" class="form-control" placeholder="Optionale Details zur Verfügbarkeit (z.B. spezielle Monate, Ausnahmetermine)" style="width: 100%;" value="Freitags ab 17:00, Samstag/Sonntag ganztägig verfügbar.">
+                    </div>
+
+                    <div class="form-row" style="margin-top: 20px;">
                         <div class="form-group col-6">
                             <label for="offer-location">Standort (PLZ / Ort)</label>
                             <input type="text" id="offer-location" required value="8057 Zürich">
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="offer-radius">Einsatzradius</label>
-                        <select id="offer-radius">
-                            <option value="15">+15 km</option>
-                            <option value="30">+30 km</option>
-                            <option value="50" selected>+50 km</option>
-                            <option value="100">+100 km</option>
-                        </select>
+                        <div class="form-group col-6">
+                            <label for="offer-radius">Einsatzradius</label>
+                            <select id="offer-radius">
+                                <option value="15">+15 km</option>
+                                <option value="30">+30 km</option>
+                                <option value="50" selected>+50 km</option>
+                                <option value="100">+100 km</option>
+                            </select>
+                        </div>
                     </div>
 
                     <!-- Category Specs: Venue (Raum) -->
