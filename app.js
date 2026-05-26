@@ -401,10 +401,10 @@ function renderPlannerDashboard() {
     
     // Calculate total planned events
     document.getElementById('planner-stats-text').textContent = 
-        `Momentan hast du ${plannerEvents.length} geplante${plannerEvents.length === 1 ? 'n' : 'e'} Event${plannerEvents.length === 1 ? '' : 's'} in der Zukunft`;
+        `Momentan hast du ${plannerEvents.length} aktive Ausschreibung${plannerEvents.length === 1 ? '' : 'en'}`;
     
     if (plannerEvents.length === 0) {
-        listBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Keine Events angelegt. Erstelle dein erstes Event!</td></tr>`;
+        listBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Keine Ausschreibungen angelegt. Erstelle deine erste Ausschreibung!</td></tr>`;
         return;
     }
     
@@ -493,7 +493,7 @@ function renderPlannerMatches(eventId) {
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom:15px"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
                 <h3>Noch keine Bewerbungen erhalten</h3>
                 <p>Sobald passende Dienstleister sich auf deine Ausschreibung bewerben, werden sie hier angezeigt.</p>
-                <p style="font-size:0.85rem">[SYSTEM_INFO] <em>Tipp: Wechsle in der Prototyp-Steuerung unten zu <strong>Martin (Anbieter)</strong> und reiche seine Bewerbung ein!</em></p>
+                <p style="font-size:0.85rem; color: var(--color-primary);"><strong>Hinweis:</strong> <em>Wechsle in der Steuerung unten zu <strong>Martin (Anbieter)</strong> und reiche seine Bewerbung ein!</em></p>
             </div>
         `;
         return;
@@ -523,9 +523,9 @@ function renderPlannerMatches(eventId) {
         
         Object.values(providerGroups).forEach(group => {
             // Determine overall status for this provider group:
-            // If any match is 'provider_sent', action needed is "Schau dir das Profil an"
+            // If any match is 'provider_sent', action needed is "Angebot prüfen"
             // If all matches are accepted/rejected, display that status.
-            let overallStatusText = 'Schau dir das Profil an';
+            let overallStatusText = 'Angebot prüfen';
             let overallStatusClass = 'status-sent';
             
             const hasSent = group.matches.some(m => m.status === 'provider_sent');
@@ -539,7 +539,7 @@ function renderPlannerMatches(eventId) {
                 overallStatusText = 'Chat aktiv';
                 overallStatusClass = 'status-accepted';
             } else if (hasSent) {
-                overallStatusText = 'Schau dir das Profil an';
+                overallStatusText = 'Angebot prüfen';
                 overallStatusClass = 'status-sent';
             }
             
@@ -569,20 +569,20 @@ function renderPlannerMatches(eventId) {
             const offer = state.providerOffers.find(o => o.id === m.offerId);
             if (!offer) return;
             
-            let statusText = 'Schau dir das Profil an';
+            let statusText = 'Angebot prüfen';
             let statusClass = 'status-sent';
             
             if (m.status === 'provider_sent') {
-                statusText = 'Schau dir das Profil an';
+                statusText = 'Angebot prüfen';
                 statusClass = 'status-sent';
             } else if (m.status === 'planner_interested') {
                 statusText = 'Interesse bekundet';
                 statusClass = 'status-interested';
             } else if (m.status === 'accepted') {
-                statusText = 'Profil angenommen';
+                statusText = 'Angenommen';
                 statusClass = 'status-accepted';
             } else if (m.status === 'rejected') {
-                statusText = 'Profil abgelehnt';
+                statusText = 'Abgelehnt';
                 statusClass = 'status-rejected';
             }
             

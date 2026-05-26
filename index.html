@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EntertainMe – Automated Event Matchmaking Matrix</title>
+    <title>EntertainMe – Matchmaking für Eventplaner & Dienstleister</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,22 +11,22 @@
     <!-- Floating System Dashboard switcher -->
     <div class="admin-control-panel">
         <div class="admin-panel-content">
-            <span class="admin-label">[SYSTEM_CONTROL_PANEL] :</span>
+            <span class="admin-label">Rolle wechseln:</span>
             <div class="role-selector">
                 <button id="btn-role-planner" class="role-btn active" onclick="switchRole('planner')" aria-label="Rolle wechseln zu Planer Flavio">
                     <span class="role-dot planner-dot"></span>
-                    PLANNER // FLAVIO
+                    Planer (Flavio)
                     <span class="badge" id="badge-planner-nav">0</span>
                 </button>
                 <button id="btn-role-provider" class="role-btn" onclick="switchRole('provider')" aria-label="Rolle wechseln zu Anbieter Martin">
                     <span class="role-dot provider-dot"></span>
-                    PROVIDER // MARTIN
+                    Anbieter (Martin)
                     <span class="badge" id="badge-provider-nav">0</span>
                 </button>
             </div>
-            <button class="reset-btn" onclick="resetState()" title="System zurücksetzen" aria-label="Prototyp zurücksetzen">
+            <button class="reset-btn" onclick="resetState()" title="Prototyp zurücksetzen" aria-label="Prototyp zurücksetzen">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                RESET_CORE
+                Demo zurücksetzen
             </button>
         </div>
     </div>
@@ -35,13 +35,13 @@
     <header class="main-header">
         <div class="container header-container">
             <div class="logo" onclick="navigateTo('home')">
-                <span class="logo-accent">ENTERTAINME</span> // CORE_SYS
+                <span class="logo-accent">ENTERTAINME</span><span style="font-size:0.75rem; font-family: var(--font-body); letter-spacing:0.1em; color: var(--text-muted); text-transform: uppercase; margin-left: 10px; font-weight:600;">Event Matchmaking</span>
             </div>
             <nav class="main-nav">
-                <span class="user-welcome" id="user-display-name">USER // FLAVIO</span>
-                <button class="nav-dashboard-btn" onclick="goToDashboard()" aria-label="Zu Dashboard navigieren">
+                <span class="user-welcome" id="user-display-name">Hoi Flavio</span>
+                <button class="nav-dashboard-btn" onclick="goToDashboard()" aria-label="Zu Cockpit navigieren">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
-                    DASHBOARD
+                    COCKPIT
                 </button>
             </nav>
         </div>
@@ -53,41 +53,74 @@
         <!-- AREA 1: OPENING FRAME (LANDING) -->
         <!-- ============================================== -->
         <section id="view-home" class="view active">
-            <div class="match-evaluation-split" style="grid-template-columns: 1fr 400px; gap: 40px; margin-bottom: 50px;">
-                <div class="hero-section">
-                    <h1>REVERSE EVENT<br>MATCHMAKING MATRIX.</h1>
-                    <p class="hero-subtitle">Automatisierte Vermittlung von Event-Dienstleistungen und -Locations in der Schweiz. Präzise, schnell und provisionsfrei.</p>
+            <div class="hero-container">
+                <div class="hero-content">
+                    <span class="hero-badge">Direkt. Schnell. Provisionsfrei.</span>
+                    <h1 class="hero-title">Zeit & Geld sparen beim Event-Matchmaking</h1>
+                    <p class="hero-description">
+                        Will man eine Feier wie zum Beispiel eine Geburtstagsparty oder eine Hochzeit organisieren, braucht dies Zeit und Geld. Beides soll durch <strong>EntertainMe</strong> gespart werden.
+                    </p>
+                    <p class="hero-text-paragraph">
+                        EntertainMe ist eine Plattform bzw. ein Marktplatz, auf dem man ausschreiben kann, was man für sein Fest braucht – sei dies Musik-Unterhaltung, Fotografen oder Räume.
+                    </p>
+                    <p class="hero-text-paragraph">
+                        Anbieter dieser Dienstleistungen und Infrastrukturen können dann ihr Profil anbieten. Falls dies passt, kommt es zu einem Match. Nun können Nachrichten und Offerten ausgetauscht werden. Die Kunden können dann selbst entscheiden, welche Offerte sie annehmen wollen.
+                    </p>
+                    <div class="hero-scroll-indicator" onclick="document.getElementById('roles-section').scrollIntoView({ behavior: 'smooth' })">
+                        <span class="scroll-text">Jetzt Rolle wählen & starten</span>
+                        <svg class="scroll-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <polyline points="19 12 12 19 5 12"></polyline>
+                        </svg>
+                    </div>
                 </div>
                 
-                <!-- Blueprint visual acting as a key visual for the landing frame -->
-                <div class="blueprint-container scanline-reveal" style="height: 180px; align-items: center;">
-                    <svg class="blueprint-svg" viewBox="0 0 100 60">
-                        <rect x="5" y="5" width="90" height="50" rx="3" stroke-dasharray="2,2"/>
-                        <circle cx="50" cy="30" r="15"/>
-                        <line x1="50" y1="5" x2="50" y2="55"/>
-                        <line x1="5" y1="30" x2="95" y2="30"/>
-                        <path d="M 20 20 L 30 20 L 30 30" />
-                        <path d="M 80 40 L 70 40 L 70 30" />
-                    </svg>
+                <div class="hero-visual">
+                    <div class="blueprint-container">
+                        <svg class="blueprint-svg" viewBox="0 0 100 60" aria-label="Skizze Bestuhlungsplan">
+                            <rect x="5" y="5" width="90" height="50" rx="3" stroke-dasharray="2,2"/>
+                            <circle cx="50" cy="30" r="15"/>
+                            <line x1="50" y1="5" x2="50" y2="55"/>
+                            <line x1="5" y1="30" x2="95" y2="30"/>
+                            <!-- Small tables/chairs drawings for event vibe -->
+                            <rect x="22" y="15" width="8" height="8" rx="1"/>
+                            <circle cx="26" cy="11" r="2"/>
+                            <circle cx="26" cy="27" r="2"/>
+                            <circle cx="18" cy="19" r="2"/>
+                            <circle cx="34" cy="19" r="2"/>
+
+                            <rect x="70" y="37" width="8" height="8" rx="1"/>
+                            <circle cx="74" cy="33" r="2"/>
+                            <circle cx="74" cy="49" r="2"/>
+                            <circle cx="66" cy="41" r="2"/>
+                            <circle cx="82" cy="41" r="2"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
 
-            <div class="decision-cards">
-                <div class="decision-card planner-card" onclick="startPlannerFlow()">
-                    <div class="card-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <!-- ROLES SELECTION SECTION (UPON SCROLLING DOWN) -->
+            <div class="roles-selection-section" id="roles-section">
+                <h3 class="roles-heading">Wie möchten Sie EntertainMe nutzen?</h3>
+                <p class="roles-subheading">Wählen Sie Ihre Rolle, um den interaktiven Prototyp zu starten.</p>
+                
+                <div class="decision-cards">
+                    <div class="decision-card planner-card" onclick="startPlannerFlow()" tabindex="0" aria-label="Ich plane ein Event - Veranstalter Portal">
+                        <div class="card-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        </div>
+                        <h2>Ich plane ein Event (Veranstalter)</h2>
+                        <p>Erstellen Sie ein kostenloses Anforderungsprofil und erhalten Sie passende Angebote von Dienstleistern.</p>
+                        <button class="card-btn btn-planner" tabindex="-1">Event ausschreiben</button>
                     </div>
-                    <h2>Ich plane ein Event</h2>
-                    <p>Erstelle ein Anforderungsprofil und erhalte passende Raum- und Cateringvorschläge.</p>
-                    <button class="card-btn btn-planner">System starten</button>
-                </div>
-                <div class="decision-card provider-card" onclick="startProviderFlow()">
-                    <div class="card-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <div class="decision-card provider-card" onclick="startProviderFlow()" tabindex="0" aria-label="Ich biete Services an - Dienstleister Portal">
+                        <div class="card-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h2>Ich biete Services an (Dienstleister)</h2>
+                        <p>Empfangen Sie passende Ausschreibungen in Ihrem Radius und senden Sie Angebote.</p>
+                        <button class="card-btn btn-provider" tabindex="-1">Anbieter-Portal</button>
                     </div>
-                    <h2>Ich biete Services an</h2>
-                    <p>Empfange passende Ausschreibungen in deinem Radius und sende Angebote.</p>
-                    <button class="card-btn btn-provider">Anbieter-Portal</button>
                 </div>
             </div>
         </section>
@@ -368,7 +401,7 @@
 
                         <div class="wizard-buttons">
                             <button type="button" class="btn btn-secondary" onclick="nextWizardStep(3)">Zurück</button>
-                            <button type="submit" class="btn btn-success">Eventmatrix initialisieren</button>
+                            <button type="submit" class="btn btn-success">Ausschreibung veröffentlichen</button>
                         </div>
                     </div>
                 </form>
@@ -384,10 +417,10 @@
             </div>
 
             <div class="match-toggle-container">
-                <h3>Empfangene System-Bewerbungen</h3>
+                <h3>Eingegangene Bewerbungen</h3>
                 <div class="toggle-buttons">
-                    <button id="btn-toggle-provider" class="toggle-btn active" onclick="setMatchViewMode('provider')">NACH ANBIETER</button>
-                    <button id="btn-toggle-service" class="toggle-btn" onclick="setMatchViewMode('service')">NACH SEGMENT</button>
+                    <button id="btn-toggle-provider" class="toggle-btn active" onclick="setMatchViewMode('provider')">NACH DIENSTLEISTER</button>
+                    <button id="btn-toggle-service" class="toggle-btn" onclick="setMatchViewMode('service')">NACH KATEGORIE</button>
                 </div>
             </div>
 
@@ -398,28 +431,28 @@
         </section>
 
         <!-- ============================================== -->
-        <!-- AREA 2: CO-MATRIX COMPARISON & CYBER CHAT -->
+        <!-- AREA 2: SOLL/IST COMPARISON & CHAT -->
         <!-- ============================================== -->
         <section id="view-match-details" class="view">
             <div class="back-link" onclick="goBackToMatchesOrDashboard()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-                Zurück zur Matrix-Übersicht
+                Zurück zur Übersicht
             </div>
 
             <div class="match-evaluation-split">
-                <!-- Left: Evaluation Matrix -->
+                <!-- Left: Soll/Ist-Vergleich -->
                 <div class="eval-card" id="match-eval-card">
                     <!-- Target/Actual comparison compiled dynamically -->
                 </div>
 
-                <!-- Right: Cyber Chat Area -->
+                <!-- Right: Nachrichtenaustausch & Offerten -->
                 <div class="chat-card">
                     <div class="chat-header">
                         <div class="chat-partner-info">
                             <span class="chat-avatar" id="chat-partner-avatar">M</span>
                             <div>
                                 <h4 id="chat-partner-name">Martin</h4>
-                                <span class="chat-status">PORT // ACTIVE</span>
+                                <span class="chat-status">VERBUNDEN</span>
                             </div>
                         </div>
                         <div class="chat-actions-header" id="chat-header-actions">
@@ -431,18 +464,18 @@
                         <!-- Messages render here -->
                     </div>
 
-                    <!-- Shared Cryptographic Document Panel -->
+                    <!-- Offerten-Dokumente -->
                     <div class="chat-documents-panel" id="chat-documents-list" style="display: none;">
                         <h5>Verknüpfte Dokumente</h5>
                         <div class="document-item">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                             <span class="document-name" id="doc-file-name">Offerte_1_Martin.pdf</span>
-                            <a href="#" class="document-download" onclick="simulateDownload(event)">Download // Decrypt</a>
+                            <a href="#" class="document-download" onclick="simulateDownload(event)">PDF ansehen</a>
                         </div>
                     </div>
 
                     <form class="chat-input-bar" onsubmit="handleSendChatMessage(event)">
-                        <input type="text" id="chat-input-field" placeholder="Schreibe verschlüsselte Nachricht..." required>
+                        <input type="text" id="chat-input-field" placeholder="Schreibe eine Nachricht..." required>
                         
                         <!-- Upload PDF trigger (only for providers) -->
                         <button type="button" class="upload-btn" id="chat-upload-offer-btn" onclick="simulateOfferUpload()" title="Dokument hochladen" aria-label="PDF Offerte hochladen">
@@ -463,8 +496,8 @@
         <section id="view-provider-dashboard" class="view">
             <div class="dashboard-header">
                 <div>
-                    <h2 class="welcome-heading" id="provider-welcome-title">PROVIDER // OVERVIEW</h2>
-                    <p class="subheading text-muted" id="provider-stats-text">System-Dienstleistungen aktiv</p>
+                    <h2 class="welcome-heading" id="provider-welcome-title">Dienstleister-Portal</h2>
+                    <p class="subheading text-muted" id="provider-stats-text">Dienstleistungen aktiv</p>
                 </div>
                 <button class="btn btn-primary" onclick="navigateTo('offer-create')" aria-label="Neues Dienstleistungsangebot eintragen">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -650,7 +683,7 @@
 
                     <div class="wizard-buttons">
                         <button type="button" class="btn btn-secondary" onclick="goToDashboard()">Abbrechen</button>
-                        <button type="submit" class="btn btn-success">Service initialisieren</button>
+                        <button type="submit" class="btn btn-success">Dienstleistung eintragen</button>
                     </div>
                 </form>
             </div>
@@ -662,45 +695,45 @@
         <section class="motion-ticker-container" aria-label="Echtzeit-Vermittlungsstream">
             <div class="motion-ticker-track">
                 <div class="ticker-item">
-                    <span class="ticker-accent">[TRANSACTION_ACTIVE]</span> USER_FLAVIO ⟷ PROVIDER_MARTIN // <strong>SPACE LOCATION</strong> // RAD_50KM // 8057 ZÜRICH
+                    <span class="ticker-accent">[ANFRAGE]</span> Flavio ⟷ Gewölbekeller Oerlikon // <strong>RAUM</strong> // 8057 ZÜRICH
                 </div>
                 <div class="ticker-item">
-                    <span class="ticker-accent">[TRANSACTION_ACCEPTED]</span> SARAH_V ⟷ GOTTFRIED_C // <strong>MOLECULAR CATERING</strong> // RAD_15KM // 8050 ZÜRICH
+                    <span class="ticker-accent">[MATCH]</span> Sarah ⟷ Bio-Catering & Weine // <strong>CATERING</strong> // 8050 ZÜRICH
                 </div>
                 <div class="ticker-item">
-                    <span class="ticker-accent">[TRANSACTION_ACTIVE]</span> JONAS_K ⟷ BEATS_LTD // <strong>HOLOGRAPHIC SOUND</strong> // RAD_30KM // 8400 WINTERTHUR
+                    <span class="ticker-accent">[ANFRAGE]</span> Jonas ⟷ Live-Band & DJ // <strong>UNTERHALTUNG</strong> // 8400 WINTERTHUR
                 </div>
                 <!-- Duplicate loops for smooth infinite scroll -->
                 <div class="ticker-item">
-                    <span class="ticker-accent">[TRANSACTION_ACTIVE]</span> USER_FLAVIO ⟷ PROVIDER_MARTIN // <strong>SPACE LOCATION</strong> // RAD_50KM // 8057 ZÜRICH
+                    <span class="ticker-accent">[ANFRAGE]</span> Flavio ⟷ Gewölbekeller Oerlikon // <strong>RAUM</strong> // 8057 ZÜRICH
                 </div>
                 <div class="ticker-item">
-                    <span class="ticker-accent">[TRANSACTION_ACCEPTED]</span> SARAH_V ⟷ GOTTFRIED_C // <strong>MOLECULAR CATERING</strong> // RAD_15KM // 8050 ZÜRICH
+                    <span class="ticker-accent">[MATCH]</span> Sarah ⟷ Bio-Catering & Weine // <strong>CATERING</strong> // 8050 ZÜRICH
                 </div>
                 <div class="ticker-item">
-                    <span class="ticker-accent">[TRANSACTION_ACTIVE]</span> JONAS_K ⟷ BEATS_LTD // <strong>HOLOGRAPHIC SOUND</strong> // RAD_30KM // 8400 WINTERTHUR
+                    <span class="ticker-accent">[ANFRAGE]</span> Jonas ⟷ Live-Band & DJ // <strong>UNTERHALTUNG</strong> // 8400 WINTERTHUR
                 </div>
             </div>
         </section>
 
         <!-- ============================================== -->
-        <!-- AREA 4: SYSTEM ARCHITECTURE (PERSONAL NOTE) -->
+        <!-- AREA 4: FUNCTIONALITY (PERSONAL NOTE) -->
         <!-- ============================================== -->
         <section class="view active" style="padding-top:0">
-            <h3 style="margin-bottom:10px">System-Architektur</h3>
-            <p style="margin-bottom:20px">Technische Eckdaten des Vermittlungs-Algorithmus und rechtliche Parameter.</p>
+            <h3 style="margin-bottom:10px">Wie EntertainMe funktioniert</h3>
+            <p style="margin-bottom:20px">Einfach, direkt und transparent – ohne versteckte Provisionen.</p>
             <div class="architecture-grid">
                 <div class="arch-card">
-                    <h4>Matching Engine</h4>
-                    <p>Relationales Daten-Matching auf Basis von PostGIS-Koordinaten und flexiblen JSON-Anforderungskatalogen. Echtzeitüberprüfung von Soll- und Ist-Werten ohne Verzögerung.</p>
+                    <h4>Direktes Matchmaking</h4>
+                    <p>Direkter Abgleich Ihrer Wünsche mit den Kapazitäten und Profilen der Dienstleister. Keine unnötigen Suchschleifen oder Verzögerungen.</p>
                 </div>
                 <div class="arch-card">
-                    <h4>Monetarisierung</h4>
-                    <p>Keine versteckten Provisionen. Anbieter wählen zwischen transparenten Abonnement-Modellen (Gratis, Profi, Premium) oder einem Prepaid-Credit-System zur Offertenabgabe.</p>
+                    <h4>Transparentes Modell</h4>
+                    <p>Keine versteckten Vermittlungsgebühren oder Provisionen. Dienstleister wählen ein faires Abonnement – für Veranstalter ist die Nutzung komplett kostenlos.</p>
                 </div>
                 <div class="arch-card">
-                    <h4>Swiss Shield Security</h4>
-                    <p>Sämtliche Daten werden verschlüsselt in Schweizer Rechenzentren (GDPR & Schweizer DSGVO konform) gehostet. Inaktive Verbindungsdaten werden automatisch depubliziert.</p>
+                    <h4>Schweizer Datenschutz</h4>
+                    <p>Ihre Daten werden sicher auf Servern in der Schweiz gehostet. Die Speicherung und Verarbeitung unterliegt dem Schweizer Datenschutzrecht (DSG/DSGVO).</p>
                 </div>
             </div>
         </section>
