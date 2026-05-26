@@ -33,7 +33,7 @@ const DEFAULT_STATE = {
             plannerId: 'flavio',
             name: 'Flavios Geburtstagsparty',
             type: 'Geburtstagsparty',
-            needs: ['Raum', 'Catering'],
+            needs: ['Raum', 'Catering', 'Bar', 'Servicepersonal', 'DJ'],
             date: '2026-11-05',
             time: '12:00 – 02:00',
             people: 'Ca. 30 Personen',
@@ -70,6 +70,39 @@ const DEFAULT_STATE = {
             specs: ['Nur Getränke', 'Vegetarische Optionen'],
             description: 'Hausgebrautes Bier, erlesene Weine und Cateringservice für Events in Zürich und Umgebung.',
             createdAt: new Date().toISOString()
+        },
+        {
+            id: 'offer-martin-bar',
+            providerId: 'martin',
+            category: 'Bar',
+            location: '8057 Zürich',
+            radius: 50,
+            eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
+            specs: ['Nur Getränke'],
+            description: 'Professioneller Bar-Tending- & Cocktail-Service mit mobiler Bar für Ihr Event.',
+            createdAt: new Date().toISOString()
+        },
+        {
+            id: 'offer-martin-service',
+            providerId: 'martin',
+            category: 'Servicepersonal',
+            location: '8057 Zürich',
+            radius: 50,
+            eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
+            specs: [],
+            description: 'Freundliches und speditives Servicepersonal für den Ausschank, das Buffet und die Gästebetreuung.',
+            createdAt: new Date().toISOString()
+        },
+        {
+            id: 'offer-martin-dj',
+            providerId: 'martin',
+            category: 'DJ',
+            location: '8057 Zürich',
+            radius: 50,
+            eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
+            specs: [],
+            description: 'Erfahrener Event-DJ für die passende musikalische Begleitung. Inklusive Sound- und Lichttechnik.',
+            createdAt: new Date().toISOString()
         }
     ],
     
@@ -89,6 +122,33 @@ const DEFAULT_STATE = {
             eventId: 'event-flavio-1',
             offerId: 'offer-martin-catering',
             category: 'Catering',
+            status: 'potential',
+            providerMessage: '',
+            updatedAt: new Date().toISOString()
+        },
+        {
+            id: 'match-martin-bar',
+            eventId: 'event-flavio-1',
+            offerId: 'offer-martin-bar',
+            category: 'Bar',
+            status: 'potential',
+            providerMessage: '',
+            updatedAt: new Date().toISOString()
+        },
+        {
+            id: 'match-martin-service',
+            eventId: 'event-flavio-1',
+            offerId: 'offer-martin-service',
+            category: 'Servicepersonal',
+            status: 'potential',
+            providerMessage: '',
+            updatedAt: new Date().toISOString()
+        },
+        {
+            id: 'match-martin-dj',
+            eventId: 'event-flavio-1',
+            offerId: 'offer-martin-dj',
+            category: 'DJ',
             status: 'potential',
             providerMessage: '',
             updatedAt: new Date().toISOString()
