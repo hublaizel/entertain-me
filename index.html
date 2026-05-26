@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EntertainMe – Matchmaking für Eventplaner & Dienstleister</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
@@ -12,44 +12,43 @@
     <div class="bg-glow bg-glow-right"></div>
     <div class="bg-glow bg-glow-left"></div>
 
-    <!-- Floating System Dashboard switcher -->
-    <div class="admin-control-panel">
-        <div class="admin-panel-content">
-            <span class="admin-label">Rolle wechseln:</span>
-            <div class="role-selector">
-                <button id="btn-role-planner" class="role-btn active" onclick="switchRole('planner')" aria-label="Rolle wechseln zu Planer Flavio">
-                    <span class="role-dot planner-dot"></span>
-                    Planer (Flavio)
-                    <span class="badge" id="badge-planner-nav">0</span>
-                </button>
-                <button id="btn-role-provider" class="role-btn" onclick="switchRole('provider')" aria-label="Rolle wechseln zu Anbieter Martin">
-                    <span class="role-dot provider-dot"></span>
-                    Anbieter (Martin)
-                    <span class="badge" id="badge-provider-nav">0</span>
-                </button>
-            </div>
-            <button class="reset-btn" onclick="resetState()" title="Prototyp zurücksetzen" aria-label="Prototyp zurücksetzen">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                Demo zurücksetzen
-            </button>
-        </div>
-    </div>
-
     <!-- Main Header -->
     <header class="main-header">
         <div class="container header-container">
-            <div class="logo" onclick="navigateTo('home')">
-                <span class="logo-accent">ENTERTAINME</span><span style="font-size:0.75rem; font-family: var(--font-body); letter-spacing:0.1em; color: var(--text-muted); text-transform: uppercase; margin-left: 10px; font-weight:600;">Event Matchmaking</span>
-            </div>
+            <button type="button" class="logo" onclick="navigateTo('home')" aria-label="Zur Startseite">
+                <span class="logo-accent">EntertainMe</span><span class="logo-tagline">Event Matchmaking</span>
+            </button>
             <nav class="main-nav">
                 <span class="user-welcome" id="user-display-name">Hoi Flavio</span>
-                <button class="nav-dashboard-btn" onclick="goToDashboard()" aria-label="Zu Cockpit navigieren">
+                <button class="nav-dashboard-btn" onclick="goToDashboard()" aria-label="Zur Übersicht">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
-                    COCKPIT
+                    Übersicht
                 </button>
             </nav>
         </div>
     </header>
+
+    <aside class="admin-control-panel" aria-label="Demo-Rollenwechsel">
+        <div class="container admin-panel-content">
+            <span class="admin-label">Demo ansehen als</span>
+            <div class="role-selector">
+                <button id="btn-role-planner" class="role-btn active" onclick="switchRole('planner')" aria-label="Ansicht für Veranstalter Flavio">
+                    <span class="role-dot planner-dot"></span>
+                    Veranstalter: Flavio
+                    <span class="badge" id="badge-planner-nav">0</span>
+                </button>
+                <button id="btn-role-provider" class="role-btn" onclick="switchRole('provider')" aria-label="Ansicht für Anbieter Martin">
+                    <span class="role-dot provider-dot"></span>
+                    Anbieter: Martin
+                    <span class="badge" id="badge-provider-nav">0</span>
+                </button>
+            </div>
+            <button class="reset-btn" onclick="resetState()" title="Demo zurücksetzen" aria-label="Demo zurücksetzen">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                Zurücksetzen
+            </button>
+        </div>
+    </aside>
 
     <main class="main-content container">
 
@@ -59,50 +58,55 @@
         <section id="view-home" class="view active">
             <div class="hero-container">
                 <div class="hero-content">
-                    <span class="hero-badge">Direkt. Schnell. Provisionsfrei.</span>
-                    <h1 class="hero-title"><span class="text-highlight">Zeit & Geld sparen</span> beim Event-Matchmaking</h1>
-                    
-                    <ul class="hero-bullets">
-                        <li><strong>Zeit & Geld sparen</strong> bei der Organisation von Feiern (wie Geburtstagspartys oder Hochzeiten).</li>
-                        <li><strong>Bedarf ausschreiben</strong>: Einfach eintragen, was benötigt wird (z. B. Musik-Unterhaltung, Fotografen oder Räume).</li>
-                        <li><strong>Profil anbieten</strong>: Passende Dienstleister & Infrastruktur-Anbieter senden ihr Profil direkt zu.</li>
-                        <li><strong>Direktes Match</strong>: Bei Übereinstimmung kommt es zu einem Match.</li>
-                        <li><strong>Austausch</strong>: Nachrichten und Offerten können direkt ausgetauscht werden.</li>
-                        <li><strong>Freie Entscheidung</strong>: Kunden entscheiden selbst, welche Offerte sie annehmen wollen.</li>
-                    </ul>
-
-                    <div class="hero-scroll-indicator" onclick="document.getElementById('roles-section').scrollIntoView({ behavior: 'smooth' })">
-                        <span class="scroll-text">Jetzt Rolle wählen & starten</span>
-                        <svg class="scroll-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <polyline points="19 12 12 19 5 12"></polyline>
-                        </svg>
+                    <span class="hero-badge">Direkt verbinden. Ohne Vermittlungsprovision.</span>
+                    <h1 class="hero-title">Finde die passenden Profis für <span class="text-highlight">deinen besonderen Anlass.</span></h1>
+                    <p class="hero-lead">Schreibe deinen Event in wenigen Minuten aus. Locations, Catering und Unterhaltung melden sich mit passenden Angeboten direkt bei dir.</p>
+                    <div class="hero-actions">
+                        <button type="button" class="btn btn-primary hero-primary" onclick="beginEventRequest()">Event kostenlos ausschreiben</button>
+                        <button type="button" class="btn btn-secondary" onclick="startProviderFlow()">Services anbieten</button>
+                    </div>
+                    <div class="hero-proof" aria-label="Vorteile">
+                        <span>Kostenlos für Veranstalter</span>
+                        <span>Direkter Austausch</span>
+                        <span>Regionale Anbieter</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ROLES SELECTION SECTION (UPON SCROLLING DOWN) -->
+            <div class="process-section" aria-label="Ablauf">
+                <div class="process-heading">
+                    <span class="section-kicker">So funktioniert es</span>
+                    <h2>Vom Wunsch zur Offerte in drei Schritten</h2>
+                </div>
+                <div class="process-grid">
+                    <article class="process-card"><span>01</span><h3>Event erfassen</h3><p>Datum, Ort und gesuchte Leistungen festlegen.</p></article>
+                    <article class="process-card"><span>02</span><h3>Angebote vergleichen</h3><p>Passende Profile und Leistungen direkt prüfen.</p></article>
+                    <article class="process-card"><span>03</span><h3>Direkt vereinbaren</h3><p>Nachrichten und Offerten ohne Umwege austauschen.</p></article>
+                </div>
+            </div>
+
             <div class="roles-selection-section" id="roles-section">
-                <h3 class="roles-heading">Wie möchten Sie EntertainMe nutzen?</h3>
-                <p class="roles-subheading">Wählen Sie Ihre Rolle, um den interaktiven Prototyp zu starten.</p>
+                <span class="section-kicker">Interaktive Demo</span>
+                <h2 class="roles-heading">Welche Seite möchten Sie erleben?</h2>
+                <p class="roles-subheading">Starten Sie mit einer vorhandenen Beispielanfrage und wechseln Sie jederzeit die Rolle.</p>
                 
                 <div class="decision-cards">
-                    <div class="decision-card planner-card" onclick="startPlannerFlow()" tabindex="0" aria-label="Ich plane ein Event - Veranstalter Portal">
-                        <div class="card-icon">
+                    <button type="button" class="decision-card planner-card" onclick="startPlannerFlow()" aria-label="Demo als Veranstalter öffnen">
+                        <span class="card-icon">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        </div>
-                        <h2>Ich plane ein Event (Veranstalter)</h2>
-                        <p>Erstellen Sie ein kostenloses Anforderungsprofil und erhalten Sie passende Angebote von Dienstleistern.</p>
-                        <button class="card-btn btn-planner" tabindex="-1">Event ausschreiben</button>
-                    </div>
-                    <div class="decision-card provider-card" onclick="startProviderFlow()" tabindex="0" aria-label="Ich biete Services an - Dienstleister Portal">
-                        <div class="card-icon">
+                        </span>
+                        <h3>Ich plane ein Event</h3>
+                        <p>Eine Anfrage veröffentlichen, Angebote prüfen und den passenden Anbieter kontaktieren.</p>
+                        <span class="card-btn btn-planner">Als Veranstalter starten</span>
+                    </button>
+                    <button type="button" class="decision-card provider-card" onclick="startProviderFlow()" aria-label="Demo als Anbieter öffnen">
+                        <span class="card-icon">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
-                        <h2>Ich biete Services an (Dienstleister)</h2>
-                        <p>Empfangen Sie passende Ausschreibungen in Ihrem Radius und senden Sie Angebote.</p>
-                        <button class="card-btn btn-provider" tabindex="-1">Anbieter-Portal</button>
-                    </div>
+                        </span>
+                        <h3>Ich biete Services an</h3>
+                        <p>Passende Anfragen entdecken und das eigene Angebot direkt einreichen.</p>
+                        <span class="card-btn btn-provider">Als Anbieter starten</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -112,8 +116,8 @@
         <!-- ============================================== -->
         <section id="view-register" class="view">
             <div class="auth-card">
-                <h2>System-Registrierung</h2>
-                <p class="auth-desc">Initialisiere dein Benutzerprofil in der Datenbank.</p>
+                <h2>Konto erstellen</h2>
+                <p class="auth-desc">Erfasse deine Kontaktdaten, um Anfragen und Offerten auszutauschen.</p>
                 <form id="auth-form" onsubmit="handleRegister(event)">
                     <div class="form-group">
                         <label for="reg-name">Vorname</label>
@@ -142,8 +146,9 @@
         <section id="view-planner-dashboard" class="view">
             <div class="dashboard-header">
                 <div>
-                    <h2 class="welcome-heading">PLANNER // OVERVIEW</h2>
-                    <p class="subheading text-muted" id="planner-stats-text">1 aktive Eventmatrix in der Datenbank</p>
+                    <span class="section-kicker">Veranstalter</span>
+                    <h2 class="welcome-heading">Deine Eventplanung</h2>
+                    <p class="subheading text-muted" id="planner-stats-text">1 aktive Ausschreibung</p>
                 </div>
                 <button class="btn btn-primary" onclick="navigateTo('event-create')" aria-label="Neue Eventausschreibung erstellen">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -157,9 +162,9 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Projekt-Name</th>
+                                <th>Event</th>
                                 <th>Datum</th>
-                                <th>Event-Klasse</th>
+                                <th>Art</th>
                                 <th>Anforderungen</th>
                                 <th>Offene Offerten</th>
                             </tr>
@@ -190,43 +195,73 @@
                 <form id="event-create-form" onsubmit="handleCreateEvent(event)">
                     <!-- Step 1: Basics -->
                     <div class="wizard-panel active" id="wizard-step-1">
-                        <h2>Event-Spezifikation (Basics)</h2>
+                        <h2>Was planst du?</h2>
                         <div class="form-group">
-                            <label for="event-name">Name der Eventausschreibung:</label>
+                            <label for="event-name">Name des Events</label>
                             <input type="text" id="event-name" required placeholder="z.B. Geburi Party Flavio">
                         </div>
                         <div class="form-group">
-                            <label>Event-Klasse auswählen:</label>
-                            <div class="checkbox-grid">
+                            <label>Art des Events</label>
+                            <div class="checkbox-grid text-choice-grid">
                                 <label class="checkbox-card" for="type-birthday">
                                     <input type="radio" id="type-birthday" name="event-type" value="Geburtstagsparty" checked>
-                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
                                     <span>Geburtstagsparty</span>
                                 </label>
                                 <label class="checkbox-card" for="type-wedding">
                                     <input type="radio" id="type-wedding" name="event-type" value="Hochzeit">
-                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                                     <span>Hochzeit</span>
                                 </label>
                                 <label class="checkbox-card" for="type-company">
                                     <input type="radio" id="type-company" name="event-type" value="Firmenfest">
-                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                                     <span>Firmenfest</span>
                                 </label>
                                 <label class="checkbox-card" for="type-bachelor">
                                     <input type="radio" id="type-bachelor" name="event-type" value="Junggesellenabschied">
-                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 5 1 2M20 7l-2 1M18 15l2 1M11 20l1-2M15 19l2-2M12 5l-1.7 1.7a1 1 0 0 0-.3.7l-.3 2.4a1 1 0 0 1-1.4 1.1L5 9a1 1 0 0 1-.2-1.4l1.7-1.7A1 1 0 0 0 7 5.5l-.3-2.4a1 1 0 0 1 1.4-1.1L11 3a1 1 0 0 1 .2 1.4Z"/><path d="M5 22h.01M19 2h.01M21 12h.01M12 11h.01M3 8h.01"/></svg>
                                     <span>Junggesellenabschied</span>
                                 </label>
                                 <label class="checkbox-card" for="type-club">
                                     <input type="radio" id="type-club" name="event-type" value="Vereinsfest">
-                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M5 8h12v11a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8zM14 2v4M10 2v4M6 2v4"/></svg>
                                     <span>Vereinsfest</span>
                                 </label>
                                 <label class="checkbox-card" for="type-courses">
-                                    <input type="radio" id="type-courses" name="event-type" value="Kurse">
-                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+                                    <input type="radio" id="type-courses" name="event-type" value="Workshop">
                                     <span>Kurse / Workshops</span>
+                                </label>
+                                <label class="checkbox-card" for="type-anniversary">
+                                    <input type="radio" id="type-anniversary" name="event-type" value="Jubiläum">
+                                    <span>Jubiläum</span>
+                                </label>
+                                <label class="checkbox-card" for="type-christmas">
+                                    <input type="radio" id="type-christmas" name="event-type" value="Weihnachtsfeier">
+                                    <span>Weihnachtsfeier</span>
+                                </label>
+                                <label class="checkbox-card" for="type-apero">
+                                    <input type="radio" id="type-apero" name="event-type" value="Apéro">
+                                    <span>Apéro / Empfang</span>
+                                </label>
+                                <label class="checkbox-card" for="type-conference">
+                                    <input type="radio" id="type-conference" name="event-type" value="Tagung">
+                                    <span>Tagung / Seminar</span>
+                                </label>
+                                <label class="checkbox-card" for="type-networking">
+                                    <input type="radio" id="type-networking" name="event-type" value="Networking">
+                                    <span>Networking-Event</span>
+                                </label>
+                                <label class="checkbox-card" for="type-concert">
+                                    <input type="radio" id="type-concert" name="event-type" value="Kulturveranstaltung">
+                                    <span>Konzert / Kultur</span>
+                                </label>
+                                <label class="checkbox-card" for="type-family">
+                                    <input type="radio" id="type-family" name="event-type" value="Familienfest">
+                                    <span>Familienfest</span>
+                                </label>
+                                <label class="checkbox-card" for="type-graduation">
+                                    <input type="radio" id="type-graduation" name="event-type" value="Abschlussfeier">
+                                    <span>Abschlussfeier</span>
+                                </label>
+                                <label class="checkbox-card" for="type-other">
+                                    <input type="radio" id="type-other" name="event-type" value="Andere">
+                                    <span>Anderer Anlass</span>
                                 </label>
                             </div>
                         </div>
@@ -239,27 +274,67 @@
                     <!-- Step 2: Needs -->
                     <div class="wizard-panel" id="wizard-step-2">
                         <h2>Benötigte Dienstleistungen</h2>
-                        <p class="wizard-desc">Wähle die Segmente aus, für die das System Angebote einholen soll.</p>
-                        <div class="checkbox-grid">
+                        <p class="wizard-desc">Wähle die Leistungen aus, für die du Angebote erhalten möchtest.</p>
+                        <div class="checkbox-grid text-choice-grid" id="service-needs-grid">
                             <label class="checkbox-card select-box" for="need-raum">
-                                <input type="checkbox" id="need-raum" value="Raum" checked>
-                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="16"/><line x1="15" y1="22" x2="15" y2="16"/><line x1="9" y1="16" x2="15" y2="16"/><path d="M9 6h6M9 10h6"/></svg>
+                                <input type="checkbox" id="need-raum" name="event-needs" value="Raum" checked>
                                 <span>Raum / Location</span>
                             </label>
                             <label class="checkbox-card select-box" for="need-catering">
-                                <input type="checkbox" id="need-catering" value="Catering" checked>
-                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v4M12 15V2a1 1 0 0 1 1-1h1a7 7 0 0 1 7 7v7a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1zm0 0v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-5M8 12v5c0 2.2 1.8 4 4 4"/></svg>
+                                <input type="checkbox" id="need-catering" name="event-needs" value="Catering" checked>
                                 <span>Catering / Verpflegung</span>
                             </label>
+                            <label class="checkbox-card select-box" for="need-bar">
+                                <input type="checkbox" id="need-bar" name="event-needs" value="Bar">
+                                <span>Bar / Getränke</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-service">
+                                <input type="checkbox" id="need-service" name="event-needs" value="Servicepersonal">
+                                <span>Servicepersonal</span>
+                            </label>
                             <label class="checkbox-card select-box" for="need-unterhaltung">
-                                <input type="checkbox" id="need-unterhaltung" value="Unterhaltung">
-                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+                                <input type="checkbox" id="need-unterhaltung" name="event-needs" value="Unterhaltung">
                                 <span>Show & Unterhaltung</span>
                             </label>
+                            <label class="checkbox-card select-box" for="need-dj">
+                                <input type="checkbox" id="need-dj" name="event-needs" value="DJ">
+                                <span>DJ / Musik</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-live-musik">
+                                <input type="checkbox" id="need-live-musik" name="event-needs" value="Live-Musik">
+                                <span>Live-Musik / Band</span>
+                            </label>
                             <label class="checkbox-card select-box" for="need-fotografie">
-                                <input type="checkbox" id="need-fotografie" value="Fotografie">
-                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <input type="checkbox" id="need-fotografie" name="event-needs" value="Fotografie">
                                 <span>Fotografie / Video</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-dekoration">
+                                <input type="checkbox" id="need-dekoration" name="event-needs" value="Dekoration">
+                                <span>Dekoration / Floristik</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-technik">
+                                <input type="checkbox" id="need-technik" name="event-needs" value="Technik">
+                                <span>Licht / Ton / Technik</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-mobiliar">
+                                <input type="checkbox" id="need-mobiliar" name="event-needs" value="Mobiliar">
+                                <span>Mobiliar / Ausstattung</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-transport">
+                                <input type="checkbox" id="need-transport" name="event-needs" value="Transport">
+                                <span>Transport / Shuttle</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-sicherheit">
+                                <input type="checkbox" id="need-sicherheit" name="event-needs" value="Sicherheit">
+                                <span>Sicherheit</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-kinder">
+                                <input type="checkbox" id="need-kinder" name="event-needs" value="Kinderbetreuung">
+                                <span>Kinderbetreuung</span>
+                            </label>
+                            <label class="checkbox-card select-box" for="need-planung">
+                                <input type="checkbox" id="need-planung" name="event-needs" value="Eventplanung">
+                                <span>Eventplanung / Koordination</span>
                             </label>
                         </div>
                         <div class="wizard-buttons">
@@ -270,10 +345,10 @@
 
                     <!-- Step 3: Date & Location -->
                     <div class="wizard-panel" id="wizard-step-3">
-                        <h2>Schnittpunkte der Dimensionen (Zeit/Ort)</h2>
+                        <h2>Wann und wo findet es statt?</h2>
                         <div class="form-row">
                             <div class="form-group col-6">
-                                <label for="event-date">Planungs-Datum:</label>
+                                <label for="event-date">Datum</label>
                                 <input type="date" id="event-date" required value="2026-11-05">
                             </div>
                             <div class="form-group col-6" style="display: flex; gap: 20px; align-items: flex-end;">
@@ -289,21 +364,21 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-6">
-                                <label for="event-time">System-Zeitfenster (von - bis):</label>
+                                <label for="event-time">Zeitfenster</label>
                                 <input type="text" id="event-time" required value="12:00 – 02:00">
                             </div>
                             <div class="form-group col-6">
-                                <label for="event-people">Kapazität (Personenanzahl):</label>
+                                <label for="event-people">Anzahl Gäste</label>
                                 <input type="text" id="event-people" required value="Ca. 30 Personen">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-8">
-                                <label for="event-location">Such-Zentrum (PLZ oder Ort):</label>
+                                <label for="event-location">Ort oder PLZ</label>
                                 <input type="text" id="event-location" required value="8050 Zürich">
                             </div>
                             <div class="form-group col-4">
-                                <label for="event-radius">Maximale Distanz:</label>
+                                <label for="event-radius">Suchradius</label>
                                 <select id="event-radius">
                                     <option value="5">+5 km</option>
                                     <option value="15" selected>+15 km</option>
@@ -320,7 +395,8 @@
 
                     <!-- Step 4: Special Wishes -->
                     <div class="wizard-panel" id="wizard-step-4">
-                        <h2>Spezifikationen & Filterkriterien</h2>
+                        <h2>Welche Details sind wichtig?</h2>
+                        <p class="wizard-desc is-hidden" id="wishes-general-note">Weitere Details zu den gewählten Leistungen kannst du später direkt mit passenden Anbietern besprechen.</p>
                         <div class="wishes-section" id="wishes-raum-group">
                             <h4>Anforderungen an den Eventraum:</h4>
                             <div class="checkbox-grid-compact">
@@ -337,7 +413,7 @@
                                     <span>Beamer</span>
                                 </label>
                                 <label class="chip-checkbox" for="wish-raum-exclusiv">
-                                    <input type="checkbox" id="wish-raum-exclusiv" name="wish-raum" value="Keine andere Gäste">
+                                    <input type="checkbox" id="wish-raum-exclusiv" name="wish-raum" value="Keine anderen Gäste">
                                     <span>Keine anderen Gäste</span>
                                 </label>
                                 <label class="chip-checkbox" for="wish-raum-catering-yes">
@@ -399,10 +475,10 @@
             </div>
 
             <div class="match-toggle-container">
-                <h3>Eingegangene Bewerbungen</h3>
+                    <h3>Eingegangene Angebote</h3>
                 <div class="toggle-buttons">
-                    <button id="btn-toggle-provider" class="toggle-btn active" onclick="setMatchViewMode('provider')">NACH DIENSTLEISTER</button>
-                    <button id="btn-toggle-service" class="toggle-btn" onclick="setMatchViewMode('service')">NACH KATEGORIE</button>
+                    <button id="btn-toggle-provider" class="toggle-btn active" onclick="setMatchViewMode('provider')">Nach Anbieter</button>
+                    <button id="btn-toggle-service" class="toggle-btn" onclick="setMatchViewMode('service')">Nach Leistung</button>
                 </div>
             </div>
 
@@ -416,10 +492,10 @@
         <!-- AREA 2: SOLL/IST COMPARISON & CHAT -->
         <!-- ============================================== -->
         <section id="view-match-details" class="view">
-            <div class="back-link" onclick="goBackToMatchesOrDashboard()">
+            <button type="button" class="back-link" onclick="goBackToMatchesOrDashboard()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                 Zurück zur Übersicht
-            </div>
+            </button>
 
             <div class="match-evaluation-split">
                 <!-- Left: Soll/Ist-Vergleich -->
@@ -434,7 +510,7 @@
                             <span class="chat-avatar" id="chat-partner-avatar">M</span>
                             <div>
                                 <h4 id="chat-partner-name">Martin</h4>
-                                <span class="chat-status">VERBUNDEN</span>
+                                <span class="chat-status">Kontakt aktiv</span>
                             </div>
                         </div>
                         <div class="chat-actions-header" id="chat-header-actions">
@@ -478,12 +554,13 @@
         <section id="view-provider-dashboard" class="view">
             <div class="dashboard-header">
                 <div>
-                    <h2 class="welcome-heading" id="provider-welcome-title">Dienstleister-Portal</h2>
+                    <span class="section-kicker">Anbieter</span>
+                    <h2 class="welcome-heading" id="provider-welcome-title">Deine Anfragen</h2>
                     <p class="subheading text-muted" id="provider-stats-text">Dienstleistungen aktiv</p>
                 </div>
-                <button class="btn btn-primary" onclick="navigateTo('offer-create')" aria-label="Neues Dienstleistungsangebot eintragen">
+                    <button class="btn btn-primary" onclick="navigateTo('offer-create')" aria-label="Neue Leistung erfassen">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    Neuer Service
+                    Neue Leistung
                 </button>
             </div>
 
@@ -491,33 +568,33 @@
             <div class="stats-row">
                 <div class="stat-card">
                     <div class="stat-num" id="stat-active-offers">0</div>
-                    <div class="stat-label">Aktive Services</div>
+                    <div class="stat-label">Aktive Leistungen</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-num" id="stat-active-quotes">0</div>
-                    <div class="stat-label">Gesendete Offerten</div>
+                    <div class="stat-label">Offerten gesendet</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-num" id="stat-active-matches">0</div>
-                    <div class="stat-label">Matches</div>
+                    <div class="stat-label">Zusagen</div>
                 </div>
                 <div class="stat-card highlight">
                     <div class="stat-num" id="stat-potential-matches">0</div>
-                    <div class="stat-label">Potential Matches</div>
+                    <div class="stat-label">Neue Anfragen</div>
                 </div>
             </div>
 
-            <div class="section-card" style="margin-top: 25px;">
-                <h3>Passende Ausschreibungen (Matching Matrix)</h3>
-                <p class="section-card-desc">Diese Anforderungsprofile decken sich mit deinen angebotenen Dienstleistungen.</p>
+            <div class="section-card section-card-spaced">
+                <h3>Passende Eventanfragen</h3>
+                <p class="section-card-desc">Diese Events suchen Leistungen, die du anbietest.</p>
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Event-Matrix</th>
+                                <th>Event</th>
                                 <th>Datum</th>
-                                <th>Event-Klasse</th>
-                                <th>Erforderter Service</th>
+                                <th>Art</th>
+                                <th>Gesuchte Leistung</th>
                                 <th>Standort</th>
                                 <th>Status</th>
                             </tr>
@@ -534,13 +611,13 @@
         <!-- AREA 2: CREATE SERVICE OFFER (PROVIDER) -->
         <!-- ============================================== -->
         <section id="view-offer-create" class="view">
-            <div class="auth-card" style="max-width: 700px;">
-                <h2>Dienstleistung registrieren</h2>
-                <p class="auth-desc">Erfasse eine neue Dienstleistung, um in die Suchmatrizen der Planer aufgenommen zu werden.</p>
+            <div class="auth-card auth-card-wide">
+                <h2>Leistung anbieten</h2>
+                <p class="auth-desc">Beschreibe dein Angebot, damit Veranstalter dich für passende Events finden.</p>
                 
                 <form id="offer-create-form" onsubmit="handleCreateOffer(event)">
                     <div class="form-group">
-                        <label>Unterstützte Event-Klassen:</label>
+                        <label>Passende Eventarten</label>
                         <div class="checkbox-grid-compact">
                             <label class="chip-checkbox" for="class-birthday">
                                 <input type="checkbox" id="class-birthday" name="offer-event-types" value="Geburtstagsparty" checked>
@@ -562,6 +639,42 @@
                                 <input type="checkbox" id="class-club" name="offer-event-types" value="Vereinsfest" checked>
                                 <span>Vereinsfest</span>
                             </label>
+                            <label class="chip-checkbox" for="class-workshop">
+                                <input type="checkbox" id="class-workshop" name="offer-event-types" value="Workshop">
+                                <span>Kurse / Workshops</span>
+                            </label>
+                            <label class="chip-checkbox" for="class-anniversary">
+                                <input type="checkbox" id="class-anniversary" name="offer-event-types" value="Jubiläum">
+                                <span>Jubiläum</span>
+                            </label>
+                            <label class="chip-checkbox" for="class-christmas">
+                                <input type="checkbox" id="class-christmas" name="offer-event-types" value="Weihnachtsfeier">
+                                <span>Weihnachtsfeier</span>
+                            </label>
+                            <label class="chip-checkbox" for="class-apero">
+                                <input type="checkbox" id="class-apero" name="offer-event-types" value="Apéro">
+                                <span>Apéro / Empfang</span>
+                            </label>
+                            <label class="chip-checkbox" for="class-conference">
+                                <input type="checkbox" id="class-conference" name="offer-event-types" value="Tagung">
+                                <span>Tagung / Seminar</span>
+                            </label>
+                            <label class="chip-checkbox" for="class-networking">
+                                <input type="checkbox" id="class-networking" name="offer-event-types" value="Networking">
+                                <span>Networking-Event</span>
+                            </label>
+                            <label class="chip-checkbox" for="class-concert">
+                                <input type="checkbox" id="class-concert" name="offer-event-types" value="Kulturveranstaltung">
+                                <span>Konzert / Kultur</span>
+                            </label>
+                            <label class="chip-checkbox" for="class-family">
+                                <input type="checkbox" id="class-family" name="offer-event-types" value="Familienfest">
+                                <span>Familienfest</span>
+                            </label>
+                            <label class="chip-checkbox" for="class-graduation">
+                                <input type="checkbox" id="class-graduation" name="offer-event-types" value="Abschlussfeier">
+                                <span>Abschlussfeier</span>
+                            </label>
                             <label class="chip-checkbox" for="class-other">
                                 <input type="checkbox" id="class-other" name="offer-event-types" value="Andere" checked>
                                 <span>Andere</span>
@@ -571,22 +684,33 @@
 
                     <div class="form-row">
                         <div class="form-group col-6">
-                            <label for="offer-category">Kategorie:</label>
+                            <label for="offer-category">Leistung</label>
                             <select id="offer-category" onchange="toggleOfferSpecFields()" required>
                                 <option value="Raum" selected>Raum / Location</option>
                                 <option value="Catering">Catering / Verpflegung</option>
                                 <option value="Unterhaltung">Show & Unterhaltung</option>
                                 <option value="Fotografie">Fotografie & Video</option>
+                                <option value="Bar">Bar / Getränke</option>
+                                <option value="Servicepersonal">Servicepersonal</option>
+                                <option value="DJ">DJ / Musik</option>
+                                <option value="Live-Musik">Live-Musik / Band</option>
+                                <option value="Dekoration">Dekoration / Floristik</option>
+                                <option value="Technik">Licht / Ton / Technik</option>
+                                <option value="Mobiliar">Mobiliar / Ausstattung</option>
+                                <option value="Transport">Transport / Shuttle</option>
+                                <option value="Sicherheit">Sicherheit</option>
+                                <option value="Kinderbetreuung">Kinderbetreuung</option>
+                                <option value="Eventplanung">Eventplanung / Koordination</option>
                             </select>
                         </div>
                         <div class="form-group col-6">
-                            <label for="offer-location">Standort (PLZ / Ort):</label>
+                            <label for="offer-location">Standort (PLZ / Ort)</label>
                             <input type="text" id="offer-location" required value="8057 Zürich">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="offer-radius">Einsatzradius (Reichweite):</label>
+                        <label for="offer-radius">Einsatzradius</label>
                         <select id="offer-radius">
                             <option value="15">+15 km</option>
                             <option value="30">+30 km</option>
@@ -597,8 +721,8 @@
 
                     <!-- Category Specs: Venue (Raum) -->
                     <div class="wishes-section spec-fields" id="spec-raum-fields">
-                        <h4>Spezifikationen der Location:</h4>
-                        <p class="field-help-text">Gib an, welche Ausstattungsmerkmale deine Location aufweist.</p>
+                        <h4>Ausstattung der Location</h4>
+                        <p class="field-help-text">Welche Merkmale können Veranstalter einplanen?</p>
                         <div class="checkbox-grid-compact">
                             <label class="chip-checkbox" for="spec-raum-musik">
                                 <input type="checkbox" id="spec-raum-musik" name="spec-raum-item" value="Musikanlage" checked>
@@ -613,8 +737,8 @@
                                 <span>Beamer</span>
                             </label>
                             <label class="chip-checkbox" for="spec-raum-exclusiv">
-                                <input type="checkbox" id="spec-raum-exclusiv" name="spec-raum-item" value="Keine andere Gäste" checked>
-                                <span>Keine andere Gäste</span>
+                                <input type="checkbox" id="spec-raum-exclusiv" name="spec-raum-item" value="Keine anderen Gäste" checked>
+                                <span>Keine anderen Gäste</span>
                             </label>
                             <label class="chip-checkbox" for="spec-raum-catering-yes">
                                 <input type="checkbox" id="spec-raum-catering-yes" name="spec-raum-item" value="Nur mit Verpflegung" checked>
@@ -628,8 +752,8 @@
                     </div>
 
                     <!-- Category Specs: Catering -->
-                    <div class="wishes-section spec-fields" id="spec-catering-fields" style="display:none;">
-                        <h4>Spezifikationen des Caterings:</h4>
+                    <div class="wishes-section spec-fields is-hidden" id="spec-catering-fields">
+                        <h4>Angebot des Caterings</h4>
                         <div class="checkbox-grid-compact">
                             <label class="chip-checkbox" for="spec-cat-drinks">
                                 <input type="checkbox" id="spec-cat-drinks" name="spec-catering-item" value="Nur Getränke" checked>
@@ -658,14 +782,14 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label for="offer-desc">Dienstleistungs-Spezifikation (Freitext):</label>
-                        <textarea id="offer-desc" rows="3" placeholder="Spezifiziere Besonderheiten, z.B. Kapazitäten, Logistik..."></textarea>
+                    <div class="form-group form-group-spaced">
+                        <label for="offer-desc">Beschreibung</label>
+                        <textarea id="offer-desc" rows="3" placeholder="Zum Beispiel Kapazität, Besonderheiten oder Ablauf"></textarea>
                     </div>
 
                     <div class="wizard-buttons">
                         <button type="button" class="btn btn-secondary" onclick="goToDashboard()">Abbrechen</button>
-                        <button type="submit" class="btn btn-success">Dienstleistung eintragen</button>
+                        <button type="submit" class="btn btn-success">Leistung speichern</button>
                     </div>
                 </form>
             </div>
@@ -674,26 +798,26 @@
         <!-- ============================================== -->
         <!-- AREA 3: LIVE MATCH STREAM (MOTION STRIP) -->
         <!-- ============================================== -->
-        <section class="motion-ticker-container" aria-label="Echtzeit-Vermittlungsstream">
+        <section class="motion-ticker-container" data-home-only aria-label="Beispiele für Matches">
             <div class="motion-ticker-track">
                 <div class="ticker-item">
-                    <span class="ticker-accent">[ANFRAGE]</span> Flavio ⟷ Gewölbekeller Oerlikon // <strong>RAUM</strong> // 8057 ZÜRICH
+                    <span class="ticker-accent">Neue Anfrage</span> Flavio · Gewölbekeller Oerlikon · <strong>Location</strong> · Zürich
                 </div>
                 <div class="ticker-item">
-                    <span class="ticker-accent">[MATCH]</span> Sarah ⟷ Bio-Catering & Weine // <strong>CATERING</strong> // 8050 ZÜRICH
+                    <span class="ticker-accent">Match</span> Sarah · Bio-Catering & Weine · <strong>Catering</strong> · Zürich
                 </div>
                 <div class="ticker-item">
-                    <span class="ticker-accent">[ANFRAGE]</span> Jonas ⟷ Live-Band & DJ // <strong>UNTERHALTUNG</strong> // 8400 WINTERTHUR
+                    <span class="ticker-accent">Neue Anfrage</span> Jonas · Live-Band & DJ · <strong>Unterhaltung</strong> · Winterthur
                 </div>
                 <!-- Duplicate loops for smooth infinite scroll -->
                 <div class="ticker-item">
-                    <span class="ticker-accent">[ANFRAGE]</span> Flavio ⟷ Gewölbekeller Oerlikon // <strong>RAUM</strong> // 8057 ZÜRICH
+                    <span class="ticker-accent">Neue Anfrage</span> Flavio · Gewölbekeller Oerlikon · <strong>Location</strong> · Zürich
                 </div>
                 <div class="ticker-item">
-                    <span class="ticker-accent">[MATCH]</span> Sarah ⟷ Bio-Catering & Weine // <strong>CATERING</strong> // 8050 ZÜRICH
+                    <span class="ticker-accent">Match</span> Sarah · Bio-Catering & Weine · <strong>Catering</strong> · Zürich
                 </div>
                 <div class="ticker-item">
-                    <span class="ticker-accent">[ANFRAGE]</span> Jonas ⟷ Live-Band & DJ // <strong>UNTERHALTUNG</strong> // 8400 WINTERTHUR
+                    <span class="ticker-accent">Neue Anfrage</span> Jonas · Live-Band & DJ · <strong>Unterhaltung</strong> · Winterthur
                 </div>
             </div>
         </section>
@@ -701,21 +825,21 @@
         <!-- ============================================== -->
         <!-- AREA 4: FUNCTIONALITY (PERSONAL NOTE) -->
         <!-- ============================================== -->
-        <section class="view active" style="padding-top:0">
-            <h3 style="margin-bottom:10px">Wie EntertainMe funktioniert</h3>
-            <p style="margin-bottom:20px">Einfach, direkt und transparent – ohne versteckte Provisionen.</p>
+        <section class="trust-section" data-home-only>
+            <span class="section-kicker">Darauf können Sie zählen</span>
+            <h2>Transparent planen und direkt entscheiden</h2>
             <div class="architecture-grid">
                 <div class="arch-card">
-                    <h4>Direktes Matchmaking</h4>
-                    <p>Direkter Abgleich Ihrer Wünsche mit den Kapazitäten und Profilen der Dienstleister. Keine unnötigen Suchschleifen oder Verzögerungen.</p>
+                    <h3>Passende Angebote</h3>
+                    <p>Ihre Wünsche werden mit den Leistungen verfügbarer Anbieter abgeglichen.</p>
                 </div>
                 <div class="arch-card">
-                    <h4>Transparentes Modell</h4>
-                    <p>Keine versteckten Vermittlungsgebühren oder Provisionen. Dienstleister wählen ein faires Abonnement – für Veranstalter ist die Nutzung komplett kostenlos.</p>
+                    <h3>Faire Konditionen</h3>
+                    <p>Für Veranstalter kostenlos und ohne Provision auf gebuchte Leistungen.</p>
                 </div>
                 <div class="arch-card">
-                    <h4>Schweizer Datenschutz</h4>
-                    <p>Ihre Daten werden sicher auf Servern in der Schweiz gehostet. Die Speicherung und Verarbeitung unterliegt dem Schweizer Datenschutzrecht (DSG/DSGVO).</p>
+                    <h3>Direkter Kontakt</h3>
+                    <p>Fragen, Dokumente und Entscheidungen bleiben übersichtlich an einem Ort.</p>
                 </div>
             </div>
         </section>
@@ -724,6 +848,6 @@
 
     <div id="toast-container" class="toast-container"></div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=8"></script>
 </body>
 </html>

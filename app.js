@@ -56,7 +56,7 @@ const DEFAULT_STATE = {
             location: '8057 Zürich',
             radius: 50,
             eventTypes: ['Geburtstagsparty', 'Hochzeit', 'Firmenfest', 'Vereinsfest', 'Andere'],
-            specs: ['Musikanlage', 'Aussenplatz', 'Keine andere Gäste', 'Nur mit Verpflegung'], // Note: lacks 'Beamer'
+            specs: ['Musikanlage', 'Aussenplatz', 'Keine anderen Gäste', 'Nur mit Verpflegung'], // Note: lacks 'Beamer'
             description: 'Unser Eventraum in Zürich Oerlikon bietet Platz für bis zu 50 Personen. Perfekt für Geburtstage und Vereinsfeste. Wir brauen unser eigenes Bier!',
             createdAt: new Date().toISOString()
         },
@@ -103,12 +103,18 @@ const DEFAULT_STATE = {
 // --- Initialization on Load ---
 document.addEventListener('DOMContentLoaded', () => {
     loadState();
+    syncRoleControls();
     updateNavigationWelcome();
-    navigateTo(state.activeView);
     updateBadges();
+    bindFormDependencies();
+    restoreCurrentView();
 });
 
 // --- State Persistence ---
+function cloneDefaultState() {
+    return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+
 function saveState() {
     localStorage.setItem('entertainme_state', JSON.stringify(state));
 }
@@ -117,24 +123,30 @@ function loadState() {
     const saved = localStorage.getItem('entertainme_state');
     if (saved) {
         try {
-            state = JSON.parse(saved);
+            const storedState = JSON.parse(saved);
+            state = { ...cloneDefaultState(), ...storedState };
+            state.events = Array.isArray(storedState.events) ? storedState.events : [];
+            state.providerOffers = Array.isArray(storedState.providerOffers) ? storedState.providerOffers : [];
+            state.matches = Array.isArray(storedState.matches) ? storedState.matches : [];
+            state.chatMessages = Array.isArray(storedState.chatMessages) ? storedState.chatMessages : [];
         } catch (e) {
-            console.error('Fehler beim Laden des States. Setze zurück.', e);
-            state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+            console.error('Gespeicherte Demo-Daten konnten nicht geladen werden.', e);
+            state = cloneDefaultState();
         }
     } else {
-        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        state = cloneDefaultState();
         saveState();
     }
 }
 
 function resetState() {
-    state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    state = cloneDefaultState();
     saveState();
-    showToast('Prototyp zurückgesetzt', 'info');
+    showToast('Demo zurückgesetzt', 'info');
+    syncRoleControls();
     updateNavigationWelcome();
-    navigateTo('home');
     updateBadges();
+    navigateTo('home');
 }
 
 // --- Toast Notifications ---
@@ -146,8 +158,10 @@ function showToast(message, type = 'info') {
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             ${type === 'success' ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'}
         </svg>
-        <span>${message}</span>
     `;
+    const label = document.createElement('span');
+    label.textContent = message;
+    toast.appendChild(label);
     container.appendChild(toast);
     
     setTimeout(() => {
@@ -168,18 +182,38 @@ function navigateTo(viewId, params = {}) {
     if (activeView) {
         activeView.classList.add('active');
         state.activeView = viewId;
+        if (params.eventId) state.activeEventId = params.eventId;
+        if (params.matchId) state.activeMatchId = params.matchId;
+        toggleHomeContent(viewId === 'home');
         saveState();
         
         // Trigger specific view renders
         if (viewId === 'planner-dashboard') renderPlannerDashboard();
         if (viewId === 'provider-dashboard') renderProviderDashboard();
-        if (viewId === 'planner-matches') renderPlannerMatches(params.eventId || 'event-flavio-1');
-        if (viewId === 'match-details') renderMatchDetails(params.matchId);
+        if (viewId === 'planner-matches') renderPlannerMatches(params.eventId || state.activeEventId || 'event-flavio-1');
+        if (viewId === 'match-details') renderMatchDetails(params.matchId || state.activeMatchId);
         
         window.scrollTo(0, 0);
     } else {
         console.error(`View 'view-${viewId}' existiert nicht.`);
     }
+}
+
+function restoreCurrentView() {
+    if (state.activeView === 'match-details' && !state.activeMatchId) {
+        goToDashboard();
+        return;
+    }
+    navigateTo(state.activeView || 'home', {
+        eventId: state.activeEventId,
+        matchId: state.activeMatchId
+    });
+}
+
+function toggleHomeContent(isHome) {
+    document.querySelectorAll('[data-home-only]').forEach(section => {
+        section.classList.toggle('is-hidden', !isHome);
+    });
 }
 
 function goToDashboard() {
@@ -192,24 +226,29 @@ function goToDashboard() {
 
 // --- Role Switcher Logic ---
 function switchRole(role) {
+    if (role !== 'planner' && role !== 'provider') return;
     state.currentUser = role;
     saveState();
-    
-    // Update Role Switcher Buttons UI
-    document.getElementById('btn-role-planner').classList.toggle('active', role === 'planner');
-    document.getElementById('btn-role-provider').classList.toggle('active', role === 'provider');
-    
+    syncRoleControls();
     updateNavigationWelcome();
     updateBadges();
     
     // Redirect to respective dashboard
     if (role === 'planner') {
         navigateTo('planner-dashboard');
-        showToast('Zu Planer-Rolle (Flavio) gewechselt', 'info');
+        showToast('Ansicht für Veranstalter geöffnet', 'info');
     } else {
         navigateTo('provider-dashboard');
-        showToast('Zu Anbieter-Rolle (Martin) gewechselt', 'info');
+        showToast('Ansicht für Anbieter geöffnet', 'info');
     }
+}
+
+function syncRoleControls() {
+    const isPlanner = state.currentUser === 'planner';
+    document.getElementById('btn-role-planner').classList.toggle('active', isPlanner);
+    document.getElementById('btn-role-provider').classList.toggle('active', !isPlanner);
+    document.getElementById('btn-role-planner').setAttribute('aria-pressed', String(isPlanner));
+    document.getElementById('btn-role-provider').setAttribute('aria-pressed', String(!isPlanner));
 }
 
 function updateNavigationWelcome() {
@@ -240,6 +279,14 @@ function updateBadges() {
 // --- Business Flows: Initial Decision Card Triggers ---
 function startPlannerFlow() {
     switchRole('planner');
+}
+
+function beginEventRequest() {
+    state.currentUser = 'planner';
+    syncRoleControls();
+    updateNavigationWelcome();
+    saveState();
+    navigateTo('event-create');
 }
 
 function startProviderFlow() {
@@ -280,6 +327,10 @@ function nextWizardStep(step) {
                 return;
             }
         }
+        if (currentWizardStep === 2 && getSelectedNeeds().length === 0) {
+            showToast('Bitte wähle mindestens eine benötigte Leistung aus.', 'info');
+            return;
+        }
     }
     
     // Hide all steps
@@ -302,6 +353,29 @@ function nextWizardStep(step) {
     }
     
     currentWizardStep = step;
+    if (step === 4) updateWishSections();
+}
+
+function getSelectedNeeds() {
+    return Array.from(document.querySelectorAll('input[name="event-needs"]:checked'))
+        .map(input => input.value);
+}
+
+function updateWishSections() {
+    const needsRoom = document.getElementById('need-raum').checked;
+    const needsCatering = document.getElementById('need-catering').checked;
+    const needsFlexibleService = getSelectedNeeds().some(need => need !== 'Raum' && need !== 'Catering');
+    document.getElementById('wishes-raum-group').classList.toggle('is-hidden', !needsRoom);
+    document.getElementById('wishes-catering-group').classList.toggle('is-hidden', !needsCatering);
+    document.getElementById('wishes-general-note').classList.toggle('is-hidden', !needsFlexibleService);
+}
+
+function bindFormDependencies() {
+    document.querySelectorAll('input[name="event-needs"]').forEach(input => {
+        input.addEventListener('change', updateWishSections);
+    });
+    toggleOfferSpecFields();
+    updateWishSections();
 }
 
 function handleCreateEvent(event) {
@@ -311,11 +385,7 @@ function handleCreateEvent(event) {
     const type = document.querySelector('input[name="event-type"]:checked').value;
     
     // Needs
-    const needs = [];
-    if (document.getElementById('need-raum').checked) needs.push('Raum');
-    if (document.getElementById('need-catering').checked) needs.push('Catering');
-    if (document.getElementById('need-unterhaltung').checked) needs.push('Unterhaltung');
-    if (document.getElementById('need-fotografie').checked) needs.push('Fotografie');
+    const needs = getSelectedNeeds();
     
     if (needs.length === 0) {
         showToast('Bitte wähle mindestens einen Bedarf aus.', 'info');
@@ -370,9 +440,8 @@ function handleCreateEvent(event) {
 
 function generateMatchesForEvent(newEvent) {
     state.providerOffers.forEach(offer => {
-        // Simple mock matching engine:
-        // Matches if Category matches any of the event needs, and locations overlap
-        if (newEvent.needs.includes(offer.category)) {
+        const supportsEventType = offer.eventTypes.includes(newEvent.type) || offer.eventTypes.includes('Andere');
+        if (newEvent.needs.includes(offer.category) && supportsEventType) {
             // Check if match already exists
             const exists = state.matches.some(m => m.eventId === newEvent.id && m.offerId === offer.id);
             if (!exists) {
@@ -416,19 +485,19 @@ function renderPlannerDashboard() {
         // Date formatting: Calculate days remaining
         const diffTime = new Date(e.date) - new Date();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        const daysLabel = diffDays > 0 ? `in ${diffDays} Tagen` : 'heute';
+        const daysLabel = formatDayDistance(diffDays);
         
         const row = document.createElement('tr');
         row.innerHTML = `
             <td><strong>${escapeHtml(e.name)}</strong></td>
-            <td>${formatDateGerman(e.date)} <span style="font-size:0.8rem; color:var(--text-muted); block">${daysLabel}</span></td>
+            <td>${formatDateGerman(e.date)} <span style="font-size:0.8rem; color:var(--text-muted); display:block">${daysLabel}</span></td>
             <td>${escapeHtml(e.type)}</td>
-            <td>${e.needs.join(', ')}</td>
+            <td>${e.needs.map(escapeHtml).join(', ')}</td>
             <td>
                 <span class="badge-count ${newMsgsCount === 0 ? 'zero' : ''}">${newMsgsCount}</span>
             </td>
         `;
-        row.onclick = () => navigateTo('planner-matches', { eventId: e.id });
+        bindRowAction(row, () => navigateTo('planner-matches', { eventId: e.id }));
         listBody.appendChild(row);
     });
 }
@@ -457,6 +526,7 @@ function renderPlannerMatches(eventId) {
     
     const diffTime = new Date(event.date) - new Date();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const daysLabel = formatDayDistance(diffDays);
     
     eventBar.innerHTML = `
         <div class="event-info-main">
@@ -464,7 +534,7 @@ function renderPlannerMatches(eventId) {
             <div class="event-meta-tags">
                 <div class="event-meta-item">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-                    ${formatDateGerman(event.date)} (in ${diffDays} Tagen)
+                    ${formatDateGerman(event.date)} (${daysLabel})
                 </div>
                 <div class="event-meta-item">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -478,7 +548,7 @@ function renderPlannerMatches(eventId) {
         </div>
         <div class="event-info-needs">
             <span style="font-size:0.8rem; color:var(--text-muted); display:block; text-align:right">Gesucht:</span>
-            <strong>${event.needs.join(', ')}</strong>
+            <strong>${event.needs.map(escapeHtml).join(', ')}</strong>
         </div>
     `;
     
@@ -491,9 +561,9 @@ function renderPlannerMatches(eventId) {
         container.innerHTML = `
             <div class="section-card" style="text-align:center; padding: 50px 20px;">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom:15px"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
-                <h3>Noch keine Bewerbungen erhalten</h3>
-                <p>Sobald passende Dienstleister sich auf deine Ausschreibung bewerben, werden sie hier angezeigt.</p>
-                <p style="font-size:0.85rem; color: var(--color-primary);"><strong>Hinweis:</strong> <em>Wechsle in der Steuerung unten zu <strong>Martin (Anbieter)</strong> und reiche seine Bewerbung ein!</em></p>
+                <h3>Noch keine Angebote erhalten</h3>
+                <p>Sobald ein passender Anbieter auf deine Anfrage reagiert, erscheint sein Angebot hier.</p>
+                <p style="font-size:0.85rem; color: var(--color-primary);"><strong>Demo-Hinweis:</strong> Öffne oben die Ansicht <strong>Anbieter: Martin</strong> und sende sein Angebot.</p>
             </div>
         `;
         return;
@@ -608,24 +678,21 @@ function renderPlannerMatches(eventId) {
     }
 }
 
-// Redirect combined provider click (e.g. Martin click) to either their Room or Catering details
 function openCombinedProviderMatches(providerName, eventId) {
-    // In our prototype, if we click Martin, we go to Room match details first (which leads into the slides scenario)
-    // Or Catering, depending on what is active.
-    const martinRoomMatch = state.matches.find(m => m.eventId === eventId && m.category === 'Raum');
-    if (martinRoomMatch && martinRoomMatch.status !== 'potential') {
-        navigateTo('match-details', { matchId: martinRoomMatch.id });
-    } else {
-        const martinCateringMatch = state.matches.find(m => m.eventId === eventId && m.category === 'Catering');
-        if (martinCateringMatch) {
-            navigateTo('match-details', { matchId: martinCateringMatch.id });
-        }
-    }
+    const visibleMatch = state.matches.find(match =>
+        match.eventId === eventId && match.status !== 'potential'
+    );
+    if (visibleMatch) navigateTo('match-details', { matchId: visibleMatch.id });
 }
 
 // Helper to determine back routing
 function goBackToMatchesOrDashboard() {
-    navigateTo('planner-matches', { eventId: 'event-flavio-1' });
+    const activeMatch = state.matches.find(match => match.id === currentActiveMatchId);
+    if (state.currentUser === 'planner' && activeMatch) {
+        navigateTo('planner-matches', { eventId: activeMatch.eventId });
+        return;
+    }
+    goToDashboard();
 }
 
 // ==========================================
@@ -654,7 +721,7 @@ function renderMatchDetails(matchId) {
     
     if (category === 'Raum') {
         wishesList = event.wishes.raum;
-        const allPossibleWishes = ['Musikanlage', 'Aussenplatz', 'Beamer', 'Keine andere Gäste', 'Nur mit Verpflegung', 'Nur ohne Verpflegung'];
+        const allPossibleWishes = ['Musikanlage', 'Aussenplatz', 'Beamer', 'Keine anderen Gäste', 'Nur mit Verpflegung', 'Nur ohne Verpflegung'];
         
         // Draw comparison list
         allPossibleWishes.forEach(wish => {
@@ -722,6 +789,8 @@ function renderMatchDetails(matchId) {
                 </div>
             `;
         });
+    } else {
+        evalListHTML = '<p class="text-muted">Für diese Leistung klärt ihr die Details direkt im Austausch.</p>';
     }
     
     // Compile Evaluation HTML
@@ -740,12 +809,12 @@ function renderMatchDetails(matchId) {
     
     evalCard.innerHTML = `
         <div class="eval-header">
-            <h3>Matching-Detail</h3>
-            <p style="margin-bottom:0">Soll/Ist-Vergleich für <strong>${category}</strong></p>
+            <h3>Angebot vergleichen</h3>
+            <p style="margin-bottom:0">Leistung: <strong>${escapeHtml(category)}</strong></p>
         </div>
         
         <div class="eval-matching-summary">
-            ${providerName}s Angebot deckt sich gut mit deinen Wünschen.
+            ${providerName}s Angebot im Vergleich zu deinen Wünschen.
         </div>
         
         <div class="eval-list">
@@ -798,22 +867,22 @@ function renderMatchDetails(matchId) {
         } else if (match.status === 'planner_interested') {
             // Planner is interested, can accept/hire (Slide 32)
             headerActions.innerHTML = `
-                <button class="btn btn-secondary" onclick="setMatchStatus('${matchId}', 'rejected')" style="padding: 6px 12px; font-size:0.8rem">Profil ablehnen</button>
-                <button class="btn btn-success" onclick="setMatchStatus('${matchId}', 'accepted')" style="padding: 6px 12px; font-size:0.8rem; margin-left: 8px;">Profil annehmen</button>
+                <button class="btn btn-secondary" onclick="setMatchStatus('${matchId}', 'rejected')" style="padding: 6px 12px; font-size:0.8rem">Ablehnen</button>
+                <button class="btn btn-success" onclick="setMatchStatus('${matchId}', 'accepted')" style="padding: 6px 12px; font-size:0.8rem; margin-left: 8px;">Annehmen</button>
             `;
         } else if (match.status === 'accepted') {
-            headerActions.innerHTML = `<span class="match-status-tag status-accepted">Profil Angenommen</span>`;
+            headerActions.innerHTML = `<span class="match-status-tag status-accepted">Angenommen</span>`;
         } else if (match.status === 'rejected') {
-            headerActions.innerHTML = `<span class="match-status-tag status-rejected">Profil Abgelehnt</span>`;
+            headerActions.innerHTML = `<span class="match-status-tag status-rejected">Abgelehnt</span>`;
         }
     } else {
         // Provider Martin View
         document.getElementById('chat-upload-offer-btn').style.display = 'flex';
         
         if (match.status === 'provider_sent') {
-            headerActions.innerHTML = `<span class="match-status-tag status-sent">Bewerbung gesendet</span>`;
+            headerActions.innerHTML = `<span class="match-status-tag status-sent">Angebot gesendet</span>`;
         } else if (match.status === 'planner_interested') {
-            headerActions.innerHTML = `<span class="match-status-tag status-interested">Planer ist interessiert</span>`;
+            headerActions.innerHTML = `<span class="match-status-tag status-interested">Interesse erhalten</span>`;
         } else if (match.status === 'accepted') {
             headerActions.innerHTML = `<span class="match-status-tag status-accepted">Auftrag Erhalten!</span>`;
         } else if (match.status === 'rejected') {
@@ -841,7 +910,7 @@ function renderChatMessages(matchId, initialProviderMsg) {
         bubble.innerHTML = `
             <div>${escapeHtml(initialProviderMsg)}</div>
             <div class="msg-meta">
-                <span>${state.currentUser === 'planner' ? 'Martin' : 'Ich'} (Bewerbungs-Nachricht)</span>
+                <span>${state.currentUser === 'planner' ? 'Martin' : 'Ich'} (Angebot)</span>
             </div>
         `;
         msgContainer.appendChild(bubble);
@@ -1034,7 +1103,7 @@ function renderProviderDashboard() {
     
     const providerOffers = state.providerOffers.filter(o => o.providerId === 'martin');
     const offersText = providerOffers.map(o => o.category).join(' und ');
-    document.getElementById('provider-stats-text').textContent = `Momentan bietest du deinen ${offersText || 'Service'} an`;
+    document.getElementById('provider-stats-text').textContent = `Aktiv angeboten: ${offersText || 'noch keine Leistung'}`;
     
     // Update Stats counts
     document.getElementById('stat-active-offers').textContent = providerOffers.length;
@@ -1071,7 +1140,7 @@ function renderProviderDashboard() {
         if (m.status === 'potential') {
             statusBadge = '<span class="match-status-tag status-potential">Offen</span>';
         } else if (m.status === 'provider_sent') {
-            statusBadge = '<span class="match-status-tag status-sent">Profil gesendet</span>';
+            statusBadge = '<span class="match-status-tag status-sent">Angebot gesendet</span>';
         } else if (m.status === 'planner_interested') {
             statusBadge = '<span class="match-status-tag status-interested">Interesse bekundet (Chat)</span>';
         } else if (m.status === 'accepted') {
@@ -1090,14 +1159,14 @@ function renderProviderDashboard() {
             <td>${statusBadge}</td>
         `;
         
-        row.onclick = () => {
+        bindRowAction(row, () => {
             if (m.status === 'potential') {
                 openPotentialMatchDetails(m.id);
             } else {
                 // If already submitted/active, open chat details directly
                 navigateTo('match-details', { matchId: m.id });
             }
-        };
+        });
         potentialTable.appendChild(row);
     });
 }
@@ -1128,7 +1197,7 @@ function openPotentialMatchDetails(matchId) {
     
     if (category === 'Raum') {
         wishesList = event.wishes.raum;
-        const allPossibleWishes = ['Musikanlage', 'Aussenplatz', 'Beamer', 'Keine andere Gäste', 'Nur mit Verpflegung', 'Nur ohne Verpflegung'];
+        const allPossibleWishes = ['Musikanlage', 'Aussenplatz', 'Beamer', 'Keine anderen Gäste', 'Nur mit Verpflegung', 'Nur ohne Verpflegung'];
         
         allPossibleWishes.forEach(wish => {
             const isRequired = wishesList.includes(wish);
@@ -1147,7 +1216,7 @@ function openPotentialMatchDetails(matchId) {
                 </div>
             `;
         });
-    } else {
+    } else if (category === 'Catering') {
         wishesList = event.wishes.catering;
         const allPossibleWishes = ['Nur Getränke', 'Nur Essen', 'Vegetarische Optionen', 'Vegane Optionen', 'Nur Vegetarisch', 'Kein Alkohol'];
         
@@ -1168,6 +1237,8 @@ function openPotentialMatchDetails(matchId) {
                 </div>
             `;
         });
+    } else {
+        evalListHTML = '<p class="text-muted">Beschreibe hier, wie deine Leistung zum Anlass passt.</p>';
     }
     
     // Check if Beamer is lacking for the Room (Slide 22)
@@ -1178,30 +1249,33 @@ function openPotentialMatchDetails(matchId) {
         comparisonText = `
             <p style="font-size:0.9rem; margin-bottom:15px">
                 Flavios Wünsche für einen Raum und dein Angebot passen gut übereinander.<br>
-                <span style="color:var(--text-muted)">Du bietest einige Extras die Flavio nicht braucht:</span> <strong>Aussenplatz, keine Andere Gäste</strong><br>
-                <span style="color:var(--color-rose)">Flavio braucht was, was du nicht anbietest:</span> <strong>Beamer</strong>
+                <span style="color:var(--text-muted)">Du bietest zusätzliche Optionen:</span> <strong>Aussenplatz, keine anderen Gäste</strong><br>
+                <span style="color:var(--color-rose)">Noch nicht abgedeckt:</span> <strong>Beamer</strong>
             </p>
         `;
-        customInitialMessage = 'Grundsätzlich hat es Platz für ein Beamer und eine Leinwand und könnte auch organisiert werden. Wir brauen unser eigenes Bier, welches konsumiert werden muss. Essen und andere Getränke sind frei wählbar und können auch von dir selber mitgebracht werden.';
-    } else {
+        customInitialMessage = 'Für einen Beamer und eine Leinwand ist Platz; beides kann organisiert werden. Zu unserem Raum gehört hausgebrautes Bier. Essen und weitere Getränke kannst du frei wählen oder selbst mitbringen.';
+    } else if (category === 'Catering') {
         comparisonText = `
             <p style="font-size:0.9rem; margin-bottom:15px">
                 Flavios Wünsche für das Catering und dein Angebot passen gut übereinander.
             </p>
         `;
         customInitialMessage = 'Falls unser Raum für dich nicht passt, bieten wir unser Bier und Weine auch zur Lieferung an. Gerne kannst du auch für eine Degustation vorbeikommen.';
+    } else {
+        comparisonText = '<p style="font-size:0.9rem; margin-bottom:15px">Dein Angebot passt zur gesuchten Leistung. Erkläre Flavio kurz, was du für diesen Anlass vorschlägst.</p>';
+        customInitialMessage = 'Gerne stelle ich dir ein passendes Angebot für deinen Anlass zusammen. Details zu Ablauf und Preis können wir direkt besprechen.';
     }
     
     evalCard.innerHTML = `
         <div class="eval-header">
-            <h3>Bewerbung senden</h3>
-            <p style="margin-bottom:0">Projekt: <strong>${event.name}</strong></p>
+            <h3>Angebot senden</h3>
+            <p style="margin-bottom:0">Event: <strong>${escapeHtml(event.name)}</strong></p>
         </div>
         
         ${comparisonText}
         
         <div style="background: rgba(255,255,255,0.02); padding:15px; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:20px">
-            <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--text-muted)">Soll/Ist Check:</h5>
+            <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--text-muted)">Abgleich der Wünsche</h5>
             ${evalListHTML}
         </div>
         
@@ -1213,10 +1287,10 @@ function openPotentialMatchDetails(matchId) {
             
             <label class="inline-checkbox" style="margin-bottom:20px; display:flex">
                 <input type="checkbox" required checked>
-                <span>Ich möchte mein Profil für ${category} an ${state.plannerName} senden</span>
+                <span>Mein Angebot für ${escapeHtml(category)} an ${escapeHtml(state.plannerName)} senden</span>
             </label>
             
-            <button type="submit" class="btn btn-success btn-block">Profil absenden</button>
+            <button type="submit" class="btn btn-success btn-block">Angebot absenden</button>
         </form>
     `;
     
@@ -1225,13 +1299,13 @@ function openPotentialMatchDetails(matchId) {
     msgContainer.innerHTML = `
         <div style="text-align:center; margin:auto; color:var(--text-muted); padding:30px">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:10px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <p>Der Chat wird freigeschaltet, sobald ${state.plannerName} Interesse an deiner Bewerbung bekundet hat.</p>
+            <p>Der Chat wird freigeschaltet, sobald ${escapeHtml(state.plannerName)} Interesse an deinem Angebot zeigt.</p>
         </div>
     `;
     
     // Hide inputs/send buttons
     document.querySelector('.chat-input-bar').style.display = 'none';
-    document.getElementById('chat-header-actions').innerHTML = `<span class="match-status-tag status-potential">Ungebucht</span>`;
+    document.getElementById('chat-header-actions').innerHTML = `<span class="match-status-tag status-potential">Entwurf</span>`;
 }
 
 function submitProviderApplication(event, matchId) {
@@ -1247,7 +1321,7 @@ function submitProviderApplication(event, matchId) {
     saveState();
     
     updateBadges();
-    showToast('Profil erfolgreich gesendet!', 'success');
+    showToast('Angebot erfolgreich gesendet', 'success');
     
     // Go back to provider dashboard
     navigateTo('provider-dashboard');
@@ -1258,8 +1332,8 @@ function submitProviderApplication(event, matchId) {
 // ==========================================
 function toggleOfferSpecFields() {
     const category = document.getElementById('offer-category').value;
-    document.getElementById('spec-raum-fields').style.display = category === 'Raum' ? 'block' : 'none';
-    document.getElementById('spec-catering-fields').style.display = category === 'Catering' ? 'block' : 'none';
+    document.getElementById('spec-raum-fields').classList.toggle('is-hidden', category !== 'Raum');
+    document.getElementById('spec-catering-fields').classList.toggle('is-hidden', category !== 'Catering');
 }
 
 function handleCreateOffer(event) {
@@ -1295,7 +1369,8 @@ function handleCreateOffer(event) {
     
     // Evaluate if this matches any existing active events
     state.events.forEach(ev => {
-        if (ev.needs.includes(category)) {
+        const supportsEventType = eventTypes.includes(ev.type) || eventTypes.includes('Andere');
+        if (ev.needs.includes(category) && supportsEventType) {
             const exists = state.matches.some(m => m.eventId === ev.id && m.offerId === newOffer.id);
             if (!exists) {
                 state.matches.push({
@@ -1311,24 +1386,41 @@ function handleCreateOffer(event) {
         }
     });
     
-    showToast('Angebot erfolgreich hinzugefügt!', 'success');
+    showToast('Leistung erfolgreich gespeichert', 'success');
     saveState();
     updateBadges();
     
     document.getElementById('offer-create-form').reset();
+    toggleOfferSpecFields();
     navigateTo('provider-dashboard');
 }
 
 // ==========================================
 // UTILITY FUNCTIONS
 // ==========================================
+function bindRowAction(row, action) {
+    row.tabIndex = 0;
+    row.setAttribute('role', 'button');
+    row.addEventListener('click', action);
+    row.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            action();
+        }
+    });
+}
+
 function formatDateGerman(dateStr) {
     if (!dateStr) return '';
-    const date = new Date(dateStr);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+    const [year, month, day] = dateStr.split('-');
+    if (!year || !month || !day) return '';
     return `${day}.${month}.${year}`;
+}
+
+function formatDayDistance(days) {
+    if (days > 0) return `in ${days} Tagen`;
+    if (days === 0) return 'heute';
+    return 'bereits vorbei';
 }
 
 function formatTime(isoStr) {
