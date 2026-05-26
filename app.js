@@ -493,7 +493,7 @@ function renderPlannerMatches(eventId) {
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom:15px"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
                 <h3>Noch keine Bewerbungen erhalten</h3>
                 <p>Sobald passende Dienstleister sich auf deine Ausschreibung bewerben, werden sie hier angezeigt.</p>
-                <p style="font-size:0.85rem">💡 <em>Tipp: Wechsle in der Prototyp-Steuerung unten zu <strong>Martin (Anbieter)</strong> und reiche seine Bewerbung ein!</em></p>
+                <p style="font-size:0.85rem">[SYSTEM_INFO] <em>Tipp: Wechsle in der Prototyp-Steuerung unten zu <strong>Martin (Anbieter)</strong> und reiche seine Bewerbung ein!</em></p>
             </div>
         `;
         return;
